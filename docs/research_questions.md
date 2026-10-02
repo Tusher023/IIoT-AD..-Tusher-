@@ -1,109 +1,92 @@
-# Research Questions
+# Research Questions (Revised — Aligned with Evidence-Based Gap)
 
 ## Primary Research Question
 
-> **How effectively can unsupervised anomaly-detection methods identify machine degradation and provide early warnings of impending failure in multivariate industrial sensor data when labeled failure examples are limited?**
+> **To what extent do unsupervised anomaly-detection methods differ in their ability to identify machine degradation and provide early failure warnings in multivariate industrial sensor data, when evaluated under a unified, methodologically rigorous framework with strict leakage prevention?**
+
+*Note: This is an empirical comparison question, not a "does our new method beat the baseline" question. The answer may be that simpler methods perform comparably — that is a valid and valuable finding.*
 
 ---
 
 ## Secondary Research Questions
 
-### RQ1: Classical vs. Deep Learning Comparison
-> How does Isolation Forest compare with Autoencoder-based anomaly detection for identifying machine degradation?
+### RQ1: Baseline vs. Deep Learning Under Fair Conditions
+> When Isolation Forest and Autoencoder-based methods are evaluated under identical data splits, normalization, threshold selection, and metrics — how do their detection performances compare?
 
-**Experimental approach:**
-- Train Isolation Forest and Autoencoder on same data splits
-- Compare using precision, recall, F1, PR-AUC, detection lead time
-- Control for threshold selection strategy
-- Repeat across multiple seeds
+**Why this matters:** Many papers compare methods under inconsistent experimental conditions. Fair comparison may reveal that performance differences are smaller than typically reported.
 
-**Expected evidence:** Quantitative performance comparison table + statistical significance test
+**Evidence needed:** Performance table with identical experimental setup, statistical significance tests across 5 seeds.
 
 ---
 
-### RQ2: Temporal vs. Non-Temporal Modeling
-> Does an LSTM Autoencoder capture temporal degradation patterns better than a conventional Autoencoder?
+### RQ2: Does Temporal Modeling Improve Detection?
+> Does an LSTM Autoencoder, which explicitly models temporal dependencies in sensor sequences, capture degradation patterns more effectively than a conventional feedforward Autoencoder that treats each timestep independently?
 
-**Experimental approach:**
-- Compare FC-Autoencoder (per-timestep) vs. LSTM-AE (sequence-based)
-- Analyze whether sequence-level reconstruction captures gradual degradation
-- Compare anomaly score trajectories for representative engines
-- Ablation: vary sequence length
+**Why this matters:** LSTM-AE adds substantial computational overhead. If it doesn't meaningfully improve detection, practitioners should know.
 
-**Expected evidence:** Performance metrics + anomaly-score trajectory comparison + ablation table
+**Evidence needed:** Performance comparison + anomaly-score trajectory visualization for representative engines + ablation on sequence length.
 
 ---
 
-### RQ3: Operating Condition Sensitivity
-> How does model performance change under different operating conditions?
+### RQ3: How Does Detection Behave Across Operating Conditions?
+> How does the performance of each method change when the dataset includes multiple operating conditions (FD001 vs FD002) or multiple fault modes (FD001 vs FD003)?
 
-**Experimental approach:**
-- FD001 (1 condition) vs. FD002 (6 conditions)
-- Train under one condition set, evaluate under another
-- Analyze per-condition performance breakdown
+**Why this matters:** Real industrial systems operate under varying conditions. A model that only works under one condition has limited practical value.
 
-**Expected evidence:** Cross-condition performance matrix + degradation analysis
+**Evidence needed:** Per-subset performance table + cross-subset evaluation (train FD001 → test FD002) + performance degradation quantification.
 
 ---
 
-### RQ4: Early Warning Capability
-> How early can each method detect abnormal machine behavior before actual failure?
+### RQ4: How Early Can Each Method Detect Degradation?
+> For each method, how many cycles before failure does the first sustained anomaly warning appear, and how does this vary across engines?
 
-**Experimental approach:**
-- Define early-warning framework (sustained anomaly score above threshold)
-- Compute first-detection time for each engine
-- Compute lead time (cycles before failure)
-- Compare across models
+**Why this matters:** An anomaly detector that only triggers 5 cycles before failure offers less value than one that triggers 50 cycles early. Mean lead time is more actionable than F1 alone.
 
-**Expected evidence:** Lead-time distribution + mean/median lead time table + per-engine timelines
+**Evidence needed:** Lead-time distribution (boxplot/histogram) per method + per-engine detection timeline + missed failure analysis.
 
 ---
 
-### RQ5: Sensitivity vs. False Alarm Trade-off
-> What is the trade-off between detection sensitivity and false alarms?
+### RQ5: What Is the Sensitivity–False Alarm Trade-off?
+> How does the choice of anomaly threshold affect the trade-off between detection sensitivity and false alarm rate for each method?
 
-**Experimental approach:**
-- Vary threshold across range
-- Plot precision-recall curves
-- Analyze false positive rate vs. detection rate
-- Report optimal operating points under different cost assumptions
+**Why this matters:** In real systems, false alarms are costly. A method with high recall but unacceptable false alarm rate may be worse than one with moderate recall and low false alarms.
 
-**Expected evidence:** PR curves + threshold analysis table + cost-sensitive analysis
+**Evidence needed:** Precision-recall curves + threshold sweep analysis + operating-point recommendation under different cost assumptions.
 
 ---
 
-### RQ6: Cross-Engine Generalization
-> How robust are the models when evaluated on machines/operating conditions not represented in training?
+### RQ6: Do Models Generalize to Unseen Engines?
+> When models are trained on one set of engines and evaluated on completely separate engines (engine-level test split), how much does performance degrade compared to evaluation on training engines?
 
-**Experimental approach:**
-- Engine-level train/val/test splits
-- Train on subset of engines, test on held-out engines
-- Potentially cross-dataset evaluation (train FD001, test FD002)
+**Why this matters:** Tests whether the model has learned general degradation patterns vs. memorizing specific engine behavior.
 
-**Expected evidence:** Generalization performance table + comparison with in-distribution performance
+**Evidence needed:** Generalization gap table (train-set performance vs. test-set performance) + analysis of which engine characteristics predict poor generalization.
 
 ---
 
-### RQ7: Complexity vs. Improvement
-> Does increasing model complexity actually provide meaningful improvements over simpler anomaly-detection approaches?
+### RQ7: Is Added Complexity Justified?
+> Does the marginal performance improvement from more complex models (LSTM-AE > AE > IF > statistical threshold) justify the additional computational cost?
 
-**Experimental approach:**
-- Compare: Statistical → Isolation Forest → Autoencoder → LSTM-AE
-- Report computational cost alongside performance
-- Analyze marginal improvement per unit of complexity
+**Why this matters:** For resource-constrained edge deployment or rapid prototyping, practitioners need to know the cost-benefit trade-off.
 
-**Expected evidence:** Performance vs. complexity chart + training/inference time comparison + parameter count
+**Evidence needed:** Performance-vs-complexity chart (F1 vs. parameter count, F1 vs. training time) + concrete recommendation table.
 
 ---
 
-## Research Question Mapping to Experiments
+## Research Question → Experiment Mapping
 
-| RQ | Primary Experiment | Dataset(s) | Key Metrics |
-|----|-------------------|------------|-------------|
-| RQ1 | Model comparison | FD001 | F1, PR-AUC, Lead Time |
-| RQ2 | Temporal ablation | FD001 | F1, Anomaly trajectories |
-| RQ3 | Cross-condition | FD001, FD002, FD004 | Per-condition F1 |
-| RQ4 | Early warning | FD001 | Lead time, Detection rate |
-| RQ5 | Threshold analysis | FD001 | PR curve, FAR |
-| RQ6 | Generalization | FD001, FD002 | Generalization gap |
-| RQ7 | Complexity analysis | FD001 | F1/cost ratio |
+| RQ | Primary Experiment | Dataset(s) | Key Metrics | Ablation |
+|----|-------------------|------------|-------------|----------|
+| RQ1 | Fair model comparison | FD001 | F1, PR-AUC, Lead Time | Threshold strategy |
+| RQ2 | Temporal vs non-temporal | FD001 | F1, Anomaly trajectories | Sequence length |
+| RQ3 | Cross-condition evaluation | FD001→FD002, FD003, FD004 | Per-condition F1 | Op. condition normalization |
+| RQ4 | Early warning analysis | FD001 | Lead time distribution | Persistence window |
+| RQ5 | Threshold sensitivity | FD001 | PR curves, FAR | Multiple threshold strategies |
+| RQ6 | Generalization test | FD001 | Train vs test gap | Engine subset size |
+| RQ7 | Complexity analysis | FD001 | F1 / training time ratio | Model size variants |
+
+---
+
+## Guiding Principle
+
+> We do not predetermine which method will "win." If Isolation Forest outperforms LSTM-AE under certain conditions, that is a finding we report with the same rigor as the reverse. The goal is understanding, not advocacy.
