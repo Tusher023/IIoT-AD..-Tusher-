@@ -341,3 +341,4 @@ class AutoencoderDetector:
             'fit_time_seconds': self.fit_time_,
             'device': self.device,
         }
+
