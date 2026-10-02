@@ -1,0 +1,64 @@
+# Baseline Models Configuration
+# Isolation Forest and Statistical Threshold Baselines
+
+experiment:
+  name: "baseline"
+  seed: 42
+  device: "cpu"  # Baselines run on CPU
+
+data:
+  dataset: "FD001"
+  data_dir: "data/raw"
+  output_dir: "data/processed"
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  split_strategy: "engine_level"  # Critical: engine-level splits
+  normalization: "standard"  # standard | minmax | robust
+
+features:
+  # Sensors to use (indices from C-MAPSS, 1-indexed)
+  # Will be determined after EDA
+  selected_sensors: null  # null = use all non-constant sensors
+  include_operational_settings: true
+
+isolation_forest:
+  n_estimators: 100
+  max_samples: "auto"
+  contamination: "auto"
+  max_features: 1.0
+  random_state: 42
+
+statistical_threshold:
+  method: "percentile"  # percentile | zscore | iqr
+  percentile: 99
+  zscore_threshold: 3.0
+
+one_class_svm:
+  kernel: "rbf"
+  gamma: "scale"
+  nu: 0.05
+  # Note: May be computationally expensive on full dataset
+
+threshold:
+  strategy: "validation_percentile"  # validation_percentile | validation_f1 | statistical
+  percentile: 95
+  # Threshold is determined using validation set ONLY
+
+evaluation:
+  metrics:
+    - precision
+    - recall
+    - f1
+    - pr_auc
+    - roc_auc
+    - false_positive_rate
+    - detection_lead_time
+    - mean_detection_delay
+  early_warning:
+    persistence_window: 5  # consecutive anomalous cycles to trigger warning
+    min_lead_time: 10  # minimum cycles before failure for useful warning
+
+output:
+  results_dir: "results"
+  experiment_id: null  # Auto-generated if null

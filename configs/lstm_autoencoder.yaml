@@ -1,0 +1,92 @@
+# LSTM Autoencoder Configuration
+# Temporal sequence-based anomaly detection
+
+experiment:
+  name: "lstm_autoencoder"
+  seed: 42
+  device: "auto"
+
+data:
+  dataset: "FD001"
+  data_dir: "data/raw"
+  output_dir: "data/processed"
+  train_ratio: 0.7
+  val_ratio: 0.15
+  test_ratio: 0.15
+  split_strategy: "engine_level"
+  normalization: "standard"
+  sequence_length: 30  # Number of timesteps per sequence
+  sequence_stride: 1   # Stride for sliding window
+
+features:
+  selected_sensors: null
+  include_operational_settings: true
+
+model:
+  type: "lstm_autoencoder"
+  # LSTM Encoder
+  encoder:
+    hidden_dim: 64
+    num_layers: 2
+    dropout: 0.2
+    bidirectional: false
+  # Latent space
+  latent_dim: 32
+  # LSTM Decoder
+  decoder:
+    hidden_dim: 64
+    num_layers: 2
+    dropout: 0.2
+
+training:
+  epochs: 100
+  batch_size: 128
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  optimizer: "adam"
+  scheduler:
+    type: "reduce_on_plateau"
+    patience: 10
+    factor: 0.5
+  early_stopping:
+    patience: 15
+    min_delta: 0.0001
+    monitor: "val_loss"
+  loss: "mse"
+  clip_grad_norm: 1.0  # Gradient clipping for LSTM stability
+  normal_ratio: 0.7
+
+anomaly_scoring:
+  method: "mse"  # mse | mae
+  temporal_aggregate: "mean"  # mean | max | last
+  feature_aggregate: "mean"  # mean | max | sum
+
+threshold:
+  strategy: "validation_percentile"
+  percentile: 95
+
+evaluation:
+  metrics:
+    - precision
+    - recall
+    - f1
+    - pr_auc
+    - roc_auc
+    - false_positive_rate
+    - detection_lead_time
+    - mean_detection_delay
+  early_warning:
+    persistence_window: 5
+    min_lead_time: 10
+
+ablation:
+  # Ablation study parameters
+  sequence_lengths: [10, 20, 30, 50]
+  latent_dims: [8, 16, 32, 64]
+  hidden_dims: [32, 64, 128]
+
+output:
+  results_dir: "results"
+  save_model: true
+  model_dir: "experiments"
+  experiment_id: null

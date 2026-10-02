@@ -1,0 +1,50 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment files
+.env
+.env.local
+
+# Data
+data/raw/*
+!data/raw/README.md
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/README.md
+!data/processed/.gitkeep
+
+# Model weights and artifacts
+*.h5
+*.pt
+*.pth
+*.ckpt
+*.bin
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Experiment tracking & results
+results/
+experiments/
+mlruns/
+wandb/
+
+# Packaging and builds
+build/
+dist/
+*.egg-info/
+eggs/
+.eggs/
+
+# IDEs
+.idea/
+.vscode/settings.json
+.DS_Store
