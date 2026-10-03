@@ -1,0 +1,1181 @@
+\documentclass[12pt,a4paper,oneside]{report}
+
+% ==============================================================================
+% PACKAGES AND CONFIGURATION
+% ==============================================================================
+\usepackage[top=1in,bottom=1in,left=1.25in,right=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{cite}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{array}
+
+\usepackage[
+    colorlinks=true,
+    linkcolor=blue!80!black,
+    citecolor=blue!80!black,
+    urlcolor=blue!80!black,
+    bookmarks=true,
+    bookmarksnumbered=true,
+    pdftitle={Unsupervised Anomaly Detection for Predictive Maintenance in Industrial IoT},
+    pdfauthor={Tusher Tarafder}
+]{hyperref}
+
+% Typography and line spacing
+\onehalfspacing
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% Code Listing Settings
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!5},
+    keywordstyle=\color{blue!80!black}\bfseries,
+    commentstyle=\color{green!50!black}\itshape,
+    stringstyle=\color{red!70!black},
+    numbers=none,
+    showstringspaces=false
+}
+
+% Header and Footer Style
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\nouppercase{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{15pt}
+
+% Chapter Title Formatting
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{20pt}{30pt}
+
+\begin{document}
+
+% ==============================================================================
+% 1. TITLE PAGE
+% ==============================================================================
+\begin{titlepage}
+    \centering
+    \vspace*{0.5cm}
+    
+    {\Large \textbf{KALINGA INSTITUTE OF INDUSTRIAL TECHNOLOGY}}\\[0.2cm]
+    {\large (Deemed to be University)}\\[0.2cm]
+    {\small Bhubaneswar, Odisha, India - 751024}\\[0.4cm]
+    {\large \textbf{School of Computer Engineering}}\\[0.2cm]
+    {\normalsize Department of Computer Science and Engineering}\\[1.5cm]
+    
+    \rule{\textwidth}{1.5pt}\\[0.4cm]
+    {\LARGE \textbf{Unsupervised Anomaly Detection for Predictive Maintenance in Industrial IoT:}}\\[0.3cm]
+    {\Large \textbf{A Systematic Empirical Comparison of Classical and Deep Learning Methods}}\\[0.4cm]
+    \rule{\textwidth}{1.5pt}\\[1.5cm]
+    
+    {\large A Thesis Submitted in Partial Fulfillment of the Requirements for the Degree of}\\[0.2cm]
+    {\large \textbf{Bachelor of Technology in Computer Science and Engineering}}\\[1.5cm]
+    
+    \begin{minipage}{0.45\textwidth}
+        \flushleft
+        \textbf{Submitted by:}\\
+        {\large \textbf{Tusher Tarafder}}\\
+        Department of CSE\\
+        KIIT Deemed to be University
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \flushright
+        \textbf{Under the Supervision of:}\\
+        {\large \textbf{Prof. (Dr.) Sujata Dash}}\\
+        Professor, Department of CSE\\
+        School of Computer Engineering
+    \end{minipage}\\[2.5cm]
+    
+    {\large \textbf{May 2026}}
+\end{titlepage}
+
+% Frontmatter numbering
+\pagenumbering{roman}
+\setcounter{page}{2}
+
+% ==============================================================================
+% 2. CERTIFICATE PAGE
+% ==============================================================================
+\newpage
+\thispagestyle{plain}
+\begin{center}
+    {\Large \textbf{KALINGA INSTITUTE OF INDUSTRIAL TECHNOLOGY}}\\[0.2cm]
+    {\large \textbf{School of Computer Engineering}}\\[0.2cm]
+    {\normalsize Department of Computer Science and Engineering}\\[1.5cm]
+    {\LARGE \textbf{CERTIFICATE}}\\[1.5cm]
+\end{center}
+
+This is to certify that the thesis entitled \textbf{``Unsupervised Anomaly Detection for Predictive Maintenance in Industrial IoT: A Systematic Empirical Comparison of Classical and Deep Learning Methods''} submitted by \textbf{Tusher Tarafder} in partial fulfillment of the requirements for the award of the degree of \textbf{Bachelor of Technology in Computer Science and Engineering} at Kalinga Institute of Industrial Technology (KIIT), Bhubaneswar, is an authentic record of bonafide research work carried out by him under my supervision and guidance.
+
+To the best of my knowledge, the matter embodied in this thesis has not been submitted to any other University or Institute for the award of any degree or diploma. The results presented in this work have been verified and are based on rigorous empirical evaluations conducted under a leak-free methodology.\\[3.5cm]
+
+\noindent
+\begin{minipage}{0.45\textwidth}
+    \rule{6cm}{0.4pt}\\
+    \textbf{Prof. (Dr.) Sujata Dash}\\
+    Supervisor\\
+    Department of Computer Science and Engineering\\
+    School of Computer Engineering\\
+    KIIT Deemed to be University
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+    \flushright
+    \rule{6cm}{0.4pt}\\
+    \textbf{Head of the Department}\\
+    Department of Computer Science and Engineering\\
+    School of Computer Engineering\\
+    KIIT Deemed to be University
+\end{minipage}
+
+% ==============================================================================
+% 3. DECLARATION PAGE
+% ==============================================================================
+\newpage
+\thispagestyle{plain}
+\begin{center}
+    {\LARGE \textbf{CANDIDATE'S DECLARATION}}\\[1.5cm]
+\end{center}
+
+I hereby declare that the research work presented in this thesis titled \textbf{``Unsupervised Anomaly Detection for Predictive Maintenance in Industrial IoT: A Systematic Empirical Comparison of Classical and Deep Learning Methods''} is an authentic record of my own research carried out under the supervision of \textbf{Prof. (Dr.) Sujata Dash}, Department of Computer Science and Engineering, School of Computer Engineering, Kalinga Institute of Industrial Technology (KIIT), Bhubaneswar.
+
+I confirm that:
+\begin{enumerate}
+    \item This work has not been submitted previously in part or in full for the award of any degree, diploma, fellowship, or other similar title to this or any other university or institution.
+    \item Due citations and acknowledgments have been made wherever materials, datasets, and code libraries developed by other researchers have been utilized.
+    \item The experimental results, findings, and discussions presented herein are free from data falsification, selective metric reporting, or data leakage across engine-level operational profiles.
+\end{enumerate}
+
+\vspace{3.5cm}
+
+\noindent
+\begin{minipage}{0.5\textwidth}
+    \textbf{Date:} May 15, 2026\\
+    \textbf{Place:} Bhubaneswar, India
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+    \flushright
+    \rule{6cm}{0.4pt}\\
+    \textbf{Tusher Tarafder}\\
+    Department of CSE\\
+    KIIT Deemed to be University
+\end{minipage}
+
+% ==============================================================================
+% 4. ACKNOWLEDGEMENTS
+% ==============================================================================
+\newpage
+\thispagestyle{plain}
+\begin{center}
+    {\LARGE \textbf{ACKNOWLEDGEMENTS}}\\[1.5cm]
+\end{center}
+
+First and foremost, I express my deepest sense of gratitude and sincere respect to my supervisor, \textbf{Prof. (Dr.) Sujata Dash}, Department of Computer Science and Engineering, School of Computer Engineering, Kalinga Institute of Industrial Technology (KIIT), Bhubaneswar. Her unwavering encouragement, insightful critique, and scholarly guidance throughout the conception, empirical experimentation, and writing of this thesis have been invaluable. She consistently encouraged scientific skepticism, emphasizing empirical rigor, methodological transparency, and evidence-driven inquiry over mere metric optimization.
+
+I extend my heartfelt thanks to the faculty and administration of the \textbf{School of Computer Engineering} and \textbf{KIIT Deemed to be University} for providing world-class computational infrastructure, research laboratories, and an intellectually vibrant environment that fostered the completion of this study.
+
+I am deeply grateful to the \textbf{NASA Prognostics Center of Excellence (PCoE)} for making the Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) turbofan engine degradation dataset publicly accessible. Their open-access benchmark has laid the empirical foundation for machine health prognostics and condition-based predictive maintenance across the global scientific community.
+
+My sincere appreciation goes to the global \textbf{open-source software community} whose foundational tools made this rigorous study possible. I specifically acknowledge the contributors and maintainers of \textit{PyTorch}, \textit{scikit-learn}, \textit{NumPy}, \textit{Pandas}, \textit{Matplotlib}, and \textit{SciPy}. The dedication of these developers to open, transparent, and reproducible scientific computing is an inspiration to student researchers worldwide.
+
+Finally, I owe an immeasurable debt of gratitude to my \textbf{family and friends} for their endless patience, unconditional moral support, and constant understanding throughout demanding nights of debugging and empirical benchmarking. Their faith in my aspirations has been my greatest source of strength and resilience.
+
+\vspace{1.5cm}
+\begin{flushright}
+    \textbf{Tusher Tarafder}
+\end{flushright}
+
+% ==============================================================================
+% 5. ABSTRACT
+% ==============================================================================
+\newpage
+\thispagestyle{plain}
+\begin{center}
+    {\LARGE \textbf{ABSTRACT}}\\[1.5cm]
+\end{center}
+
+In Industrial Internet of Things (IIoT) systems, deploying predictive maintenance is severely constrained by the scarcity of labeled run-to-failure telemetry. Consequently, unsupervised anomaly detection has emerged as an indispensable paradigm for machine health monitoring. However, contemporary literature suffers from fragmented evaluation protocols, data leakage, and a pronounced publication bias favoring complex deep learning architectures without adequate baseline justification. 
+
+This thesis presents a systematic, leak-free empirical comparison of five unsupervised anomaly detection methods spanning statistical (z-score), non-parametric ensemble (Isolation Forest), kernel distance (One-Class SVM), static neural reconstruction (Fully Connected Autoencoder), and temporal sequence reconstruction (LSTM Autoencoder) on the NASA C-MAPSS turbofan benchmark. Our rigorous evaluation across five random seeds yields three definitive findings: (1) Under single-condition regimes (FD001), the parametric mean z-score detector achieves an outstanding ROC-AUC of $0.985 \pm 0.003$, which is statistically indistinguishable from Isolation Forest ($p = 0.86$) and outperforms deep architectures without requiring any training or backpropagation; (2) Temporal recurrent modeling in the LSTM Autoencoder resolves the classification-lead time paradox, providing a $3\times$ to $10\times$ earlier warning horizon (mean lead time of $50.4$ cycles, ranging up to $111$ cycles vs. $\approx 10$ cycles for non-temporal baselines); and (3) Zero-shot cross-condition deployment causes catastrophic degradation across all methods (ROC-AUC dropping to $\approx 0.50$), whereas Isolation Forest exhibits remarkable structural robustness to novel fault modes (ROC-AUC of $0.904$ on FD001 $\rightarrow$ FD003). These insights provide actionable architectural guidelines for resource-constrained industrial edge deployments.
+
+\vspace{1.5cm}
+\noindent \textbf{Keywords:} Industrial Internet of Things (IIoT), Predictive Maintenance, Unsupervised Anomaly Detection, Isolation Forest, Autoencoder, LSTM, C-MAPSS, Prognostic Lead Time, Data Leakage.
+
+% ==============================================================================
+% 6. TABLE OF CONTENTS, LIST OF FIGURES, LIST OF TABLES
+% ==============================================================================
+\newpage
+\tableofcontents
+
+\newpage
+\listoffigures
+
+\newpage
+\listoftables
+
+% Main matter numbering
+\newpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+% ==============================================================================
+% CHAPTER 1: INTRODUCTION
+% ==============================================================================
+\chapter{Introduction}
+
+\section{Background}
+The fourth industrial revolution, commonly termed Industry 4.0, has fundamentally transformed contemporary industrial manufacturing, energy generation, and aerospace transportation through the ubiquitous deployment of cyber-physical systems and the Industrial Internet of Things (IIoT) \cite{zhao2019deep}. Modern industrial facilities are equipped with dense arrays of heterogeneous physical sensors measuring vibration, thermodynamic temperatures, rotational speeds, pneumatic pressures, and fluid flow rates at high sampling rates. This continuous stream of multivariate telemetry provides unprecedented visibility into the operating health and degradation trajectories of critical rotating machinery, including jet engines, gas turbines, heavy compressors, and industrial pumps.
+
+Historically, asset maintenance paradigms have evolved across three primary operational philosophies:
+\begin{enumerate}
+    \item \textbf{Reactive Maintenance (Run-to-Failure):} Equipment is operated continuously without intervention until functional breakdown occurs. While this strategy eliminates scheduled service overhead, it incurs catastrophic unplanned downtime, secondary structural damage, and severe safety hazards. The industrial cost of unplanned outages in heavy manufacturing and power generation routinely amounts to hundreds of thousands of dollars per hour.
+    \item \textbf{Preventive Maintenance (Time/Usage-Based):} Maintenance actions, component overhauls, and replacements are performed at rigid, calendar-driven or operating-cycle intervals regardless of the actual health state of the machinery. Although this reduces unexpected catastrophic failures, it inevitably results in the premature replacement of healthy components with substantial remaining useful life, driving up lifecycle operational expenditures.
+    \item \textbf{Predictive Maintenance (PdM) and Condition-Based Maintenance (CBM):} Maintenance interventions are dynamically scheduled based on continuous real-time estimation of asset degradation. By identifying nascent mechanical deterioration long before physical failure manifests, PdM enables precision intervention, maximizes the functional life of expensive components, and avoids unscheduled industrial shutdowns \cite{lei2018machinery}.
+\end{enumerate}
+
+\section{Problem Statement}
+Despite the compelling economic and operational advantages of predictive maintenance, its practical implementation in real-world IIoT infrastructures faces a formidable bottleneck: the extreme scarcity of labeled run-to-failure telemetry \cite{chandola2009anomaly}. 
+
+In mission-critical industrial installations, machines are specifically engineered, lubricated, and operated under strict quality controls to ensure high reliability. Consequently, industrial assets operate within nominal, healthy parameters for over $95\%$ to $99\%$ of their functional lifetimes. Catastrophic run-to-failure sequences are actively prevented by protective emergency trips, automated governor overrides, and planned interventions. Generating full run-to-failure datasets requires either deliberately operating multi-million-dollar assets to destruction—which is economically unfeasible and physically hazardous—or relying on expensive, highly constrained accelerated life testing rigs.
+
+This data asymmetry renders standard supervised machine learning paradigms largely impractical for real-world predictive maintenance. While supervised remaining useful life (RUL) estimation algorithms dominate academic literature \cite{babu2016deep, zheng2017long, li2018remaining}, they rely on the fundamental assumption that exhaustive run-to-failure trajectories with ground-truth degradation labels are readily available during model training. In commercial reality, an industrial facility typically possesses vast archives of uncurated, unlabeled telemetry representing healthy, steady-state operation, interspersed with rare, uncharacterized anomalous episodes. Therefore, the core technical challenge in modern IIoT predictive maintenance is \textbf{unsupervised anomaly detection}: developing algorithmic models that learn exclusively from nominal healthy telemetry to autonomously identify incipient degradation, assess degradation severity, and deliver actionable early warnings without relying on prior failure signatures.
+
+\section{Motivation}
+A critical survey of recent literature reveals three major methodological vulnerabilities in the current state of unsupervised anomaly detection research for predictive maintenance:
+\begin{enumerate}
+    \item \textbf{Methodological Flaws and Data Leakage:} Many published studies suffer from subtle yet devastating forms of data leakage. These include performing random observation-level train/test splits that leak temporal states across engine trajectories, fitting feature normalization scalers on full datasets prior to partitioning, and tuning anomaly decision thresholds directly on test-set distributions. Such practices yield artificially inflated benchmark scores that fail to reproduce in operational deployments.
+    \item \textbf{Lack of Multi-Dimensional Prognostic Evaluation:} Contemporary papers predominantly evaluate anomaly detectors using conventional static classification metrics, such as accuracy, precision, recall, and point-wise F1-score. However, an anomaly detector in predictive maintenance is not merely a binary classifier; it is an early-warning system. A detector that flags an anomaly five cycles before mechanical seizure is operationally useless to maintenance planners, whereas a detector that signals degradation fifty cycles in advance provides immense actionable value. Relying solely on static point metrics obscures detection lead time, alarm persistence, and false alarm frequency during healthy operating phases.
+    \item \textbf{Insufficient Justification for Architectural Complexity:} The current literature exhibits an overwhelming bias toward proposing increasingly complex deep learning architectures—such as multi-layer Long Short-Term Memory (LSTM) networks, Variational Autoencoders (VAEs), and attention-based Transformers \cite{malhotra2016lstm, vaswani2017attention, kingma2014auto}—often without benchmarking against rigorously tuned classical baselines. Simple statistical estimators and non-parametric algorithms like Isolation Forests \cite{liu2008isolation} are frequently dismissed without fair empirical comparison. It remains an open and vital question whether the substantial computational overhead, training latency, and non-convex optimization challenges of deep neural models yield genuine, statistically significant benefits over classical baselines under resource-constrained IIoT edge conditions.
+\end{enumerate}
+
+\section{Objectives}
+To address these research deficiencies, this thesis establishes a unified, leak-free empirical benchmarking framework to evaluate classical and deep learning unsupervised anomaly detection methods on the benchmark NASA C-MAPSS dataset. The specific objectives of this study are:
+\begin{enumerate}
+    \item \textbf{Formulate a Strict Leakage-Free Benchmarking Framework:} Design and implement an open-source, reproducible experimental pipeline enforcing engine-level partitioning, train-only parameter calibration, healthy-phase training constraints, and validation-confined threshold selection.
+    \item \textbf{Conduct a Systematic Comparative Benchmark:} Empirically benchmark five representative unsupervised anomaly detection methods spanning statistical (z-score), non-parametric ensemble (Isolation Forest), kernel distance (One-Class SVM), static neural reconstruction (Fully Connected Autoencoder), and temporal sequence reconstruction (LSTM Autoencoder) under identical data conditions.
+    \item \textbf{Quantify Early-Warning Horizons and Prognostic Utility:} Move beyond static classification metrics by measuring advance warning lead times, persistence window dynamics, and resolving the empirical tension between point-wise classification penalties and true prognostic early detection.
+    \item \textbf{Evaluate Robustness Across Operational and Fault Regimes:} Systematically assess algorithmic performance under single versus multi-condition operating profiles (FD001 vs. FD002) and single versus dual fault mechanisms (FD001 vs. FD003), including zero-shot cross-condition domain transfer.
+    \item \textbf{Audit Computational Overhead and Multi-Seed Stability:} Evaluate training latency, parameter footprints, and statistical significance across repeated random seeds to formulate concrete, evidence-based deployment recommendations for industrial practitioners.
+\end{enumerate}
+
+\section{Scope}
+The scope of this research is centered on the Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) turbofan engine degradation dataset published by the NASA Prognostics Center of Excellence \cite{saxena2008damage}. We investigate all four sub-datasets (FD001, FD002, FD003, FD004), representing varying combinations of operating regimes and fault modes. The investigation is restricted to offline, CPU-only training and inference environments representative of edge industrial computing appliances without discrete hardware accelerators.
+
+\section{Organization of the Thesis}
+The remainder of this thesis is structured as follows:
+\begin{itemize}
+    \item \textbf{Chapter 2 (Literature Review):} Synthesizes theoretical foundations of IIoT predictive maintenance, reviews classical and deep anomaly detection methods, and surveys previous C-MAPSS studies.
+    \item \textbf{Chapter 3 (Research Gap and Research Questions):} Formulates the identified research gaps and delineates seven primary research questions (RQ1 through RQ7).
+    \item \textbf{Chapter 4 (Dataset Description):} Provides detailed physics, sensor descriptions, subset taxonomy, and exploratory data analysis of the NASA C-MAPSS benchmark.
+    \item \textbf{Chapter 5 (Methodology):} Formulates mathematical foundations of the five evaluated detectors, seven thresholding strategies, multi-dimensional evaluation metrics, and leakage prevention protocols.
+    \item \textbf{Chapter 6 (Experimental Setup):} Details computing hardware, software dependencies, feature preprocessing pipelines, and model training configurations.
+    \item \textbf{Chapter 7 (Results and Analysis):} Presents primary comparative findings on FD001, early-warning lead-time distributions, threshold sensitivity analyses, operational complexity impacts, cross-condition transfer results, and the classification-lead time paradox.
+    \item \textbf{Chapter 8 (Ablation Studies):} Investigates multi-seed stability across five seeds, paired statistical significance hypothesis testing, and temporal sequence length ablations.
+    \item \textbf{Chapter 9 (Discussion):} Discusses practical implications, architectural selection guidelines, the evaluation metric dilemma, deployment risks under regime shift, and study limitations.
+    \item \textbf{Chapter 10 (Conclusion and Future Work):} Summarizes the five core conclusions of the research and outlines six promising future research directions.
+    \item \textbf{Appendices \& References:} Presents complete project directory structures, reproducibility execution instructions, and complete bibliographic references.
+\end{itemize}
+
+% ==============================================================================
+% CHAPTER 2: LITERATURE REVIEW
+% ==============================================================================
+\chapter{Literature Review}
+
+\section{Industrial IoT and Predictive Maintenance}
+The intersection of the Industrial Internet of Things (IIoT) and machine health management has catalyzed a paradigm shift in manufacturing asset lifecycle optimization \cite{zhao2019deep}. In modern IIoT architectures, edge sensor nodes continuously stream high-frequency physical measurements across industrial fieldbuses to supervisory edge gateways or centralized industrial cloud platforms. As depicted in comprehensive reviews by Lei et al. \cite{lei2018machinery}, modern prognostic architectures rely on continuous condition monitoring to track irreversible degradation processes caused by mechanical friction, thermo-mechanical fatigue, corrosion, and seal wear.
+
+Predictive maintenance (PdM) leverages this telemetry to perform three ascending tiers of diagnostics: (1) anomaly detection, which determines whether a machine is deviating from healthy behavior; (2) fault isolation, which identifies the physical subsystem undergoing failure; and (3) prognostic health management (PHM), which estimates Remaining Useful Life (RUL) prior to functional loss \cite{saxena2008damage}. Because failure isolation and RUL estimation typically require historical fault patterns that are unavailable in nascent deployments, anomaly detection serves as the fundamental first line of defense in industrial automation.
+
+\section{Anomaly Detection Survey}
+Anomaly detection refers to the problem of finding patterns in data that do not conform to expected normal behavior \cite{chandola2009anomaly}. In their seminal survey, Chandola, Banerjee, and Kumar formulate a comprehensive taxonomy categorizing anomalies into three distinct structural classes:
+\begin{enumerate}
+    \item \textbf{Point Anomalies:} An individual data instance that is anomalous with respect to the remainder of the dataset (e.g., an instantaneous sensor spike caused by electromagnetic interference).
+    \item \textbf{Contextual Anomalies:} A data instance that is anomalous within a specific operational context but normal otherwise (e.g., an elevated exhaust gas temperature reading that is normal during maximum takeoff thrust but highly anomalous during idle descent).
+    \item \textbf{Collective Anomalies:} A collection of related data instances that are anomalous with respect to the entire dataset, even though individual points may appear normal when viewed in isolation. Machinery degradation exemplifies a collective, drift-based anomaly wherein gradual drift across multiple correlated thermodynamic variables indicates progressive mechanical wear.
+\end{enumerate}
+
+Braei and Wagner \cite{braei2020anomaly} further categorize time-series anomaly detection algorithms into statistical, classical machine learning, and deep neural approaches, emphasizing that industrial telemetry is characterized by non-stationary operating conditions, multi-rate sampling, and complex inter-sensor cross-correlations.
+
+\section{Classical Methods}
+\subsection{Statistical Thresholding}
+Statistical anomaly detection represents the historical baseline for automated condition monitoring. In univariate and multivariate Gaussian settings, normal operating behavior is parameterized by the sample mean vector $\boldsymbol{\mu} \in \mathbb{R}^d$ and sample standard deviation vector $\boldsymbol{\sigma} \in \mathbb{R}^d$ or covariance matrix $\boldsymbol{\Sigma} \in \mathbb{R}^{d \times d}$. Standard statistical approaches include univariate z-score thresholding, Shewhart control charts, and multivariate Hotelling's $T^2$ or Mahalanobis distance metrics. While computationally instantaneous and fully interpretable, statistical methods rely heavily on distributional assumptions and struggle to capture complex non-linear manifolds in high-dimensional sensor spaces.
+
+\subsection{Isolation Forest}
+Introduced by Liu, Ting, and Zhou \cite{liu2008isolation}, Isolation Forest (iForest) represents a fundamentally distinct approach to anomaly detection. Unlike conventional density or distance-based estimators that construct a profile of normal instances and identify outliers as points that deviate from this profile, Isolation Forest explicitly isolates anomalies. 
+
+The algorithm exploits two structural quantitative properties of anomalies: they are few in number, and they possess attribute values distinct from normal instances. Consequently, in a recursive random partitioning tree (an Isolation Tree, or iTree), anomalies are isolated much closer to the root of the tree than normal instances. For a dataset of $n$ instances, the average path length of a point $x$ across an ensemble of isolation trees serves as an inverse measure of its anomalousness. Isolation Forest features sub-linear time complexity $O(t \cdot \psi \log \psi)$, where $t$ is the number of trees and $\psi$ is the subsampling size, making it exceptionally lightweight and scalable for industrial time-series.
+
+\subsection{One-Class Support Vector Machine}
+The One-Class Support Vector Machine (OC-SVM), formulated by Sch{\"o}lkopf et al. \cite{scholkopf2001estimating}, is a max-margin kernel method designed for novelty detection. OC-SVM maps training instances from the input space into a high-dimensional reproducing kernel Hilbert space (RKHS) via a non-linear mapping $\Phi(x)$ and determines a separating hyperplane that maximizes the geometric margin between the origin and the nominal training instances. The hyperparameter $\nu \in (0, 1]$ acts as an upper bound on the fraction of outliers (training contamination) and a lower bound on the number of support vectors. Using the popular Radial Basis Function (RBF) kernel, OC-SVM constructs tight, highly non-linear decision boundaries around normal operating telemetry. However, its quadratic training complexity $O(n^2)$ makes it computationally demanding on long multi-sensor sequences.
+
+\section{Deep Learning Methods}
+\subsection{Autoencoders for Representation Learning}
+Autoencoders are feedforward neural networks trained via backpropagation to reconstruct their input vectors through a compressed bottleneck layer \cite{vincent2008extracting}. Formally, an autoencoder consists of an encoder $f_\theta: \mathbb{R}^d \rightarrow \mathbb{R}^k$ (where $k \ll d$) and a decoder $g_\phi: \mathbb{R}^k \rightarrow \mathbb{R}^d$, trained to minimize a reconstruction loss:
+\begin{equation}
+    \mathcal{L}(x, \hat{x}) = \|x - g_\phi(f_\theta(x))\|_2^2
+\end{equation}
+When trained exclusively on healthy operational data, the network parameters $\theta$ and $\phi$ learn the low-dimensional manifold governing normal mechanical interactions. When an anomalous or degraded state occurs, the input deviates from the learned normal manifold, resulting in elevated reconstruction errors that serve directly as anomaly scores \cite{zhou2017anomaly}.
+
+\subsection{Recurrent Neural Networks and LSTM Autoencoders}
+While standard fully connected autoencoders evaluate sensor vectors independently at each timestep, industrial machinery degradation is inherently dynamic and sequential. Long Short-Term Memory (LSTM) networks, introduced by Hochreiter and Schmidhuber \cite{hochreiter1997long}, overcome the vanishing gradient problem in traditional recurrent networks through gated cell states, enabling them to capture long-term temporal dependencies.
+
+Malhotra et al. \cite{malhotra2016lstm} introduced the LSTM-based Encoder-Decoder architecture for multi-sensor time-series anomaly detection. In this framework, an LSTM encoder processes a sliding window of sequential multivariate telemetry $X = [x_1, x_2, \dots, x_T]$ into a fixed-length hidden vector, and an LSTM decoder reconstructs the original temporal sequence. By explicitly modeling temporal correlations across successive operating cycles, LSTM Autoencoders (LSTM-AE) are theoretically capable of detecting subtle dynamic trends and cumulative degradation patterns long before individual sensor values exceed static thresholds.
+
+\subsection{Variational Autoencoders and Transformers}
+Recent advances have introduced probabilistic generative models, such as Variational Autoencoders (VAEs) \cite{kingma2014auto}, which map inputs to a probabilistic latent prior distribution $\mathcal{N}(\boldsymbol{\mu}_z, \boldsymbol{\Sigma}_z)$ and optimize the Evidence Lower Bound (ELBO). In parallel, the self-attention mechanism formulated by Vaswani et al. \cite{vaswani2017attention} has been adapted to time-series modeling to capture global temporal context without recurrent recurrence constraints. Despite their theoretical elegance, these architectures drastically increase parameter counts and require extensive training compute.
+
+\section{C-MAPSS Benchmark Studies}
+The Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) turbofan engine degradation dataset, introduced by Saxena et al. \cite{saxena2008damage}, has served as the preeminent international benchmark for data-driven predictive maintenance for nearly two decades. 
+
+Initial research on C-MAPSS primarily addressed supervised RUL prediction. Babu et al. \cite{babu2016deep} introduced 2D deep convolutional neural networks (CNNs) for regression against RUL. Zheng et al. \cite{zheng2017long} demonstrated that multi-layer LSTMs significantly outperformed classical multi-layer perceptrons (MLPs) and support vector regression on FD001 and FD003. Li, Ding, and Sun \cite{li2018remaining} proposed deep CNN architectures with time-windowing, achieving leading performance on RUL estimation.
+
+However, over the past five years, researchers have increasingly investigated C-MAPSS under unsupervised and semi-unsupervised anomaly detection formulations \cite{zhao2019deep}. Because the ground-truth wear parameters are hidden from the sensor stream, models must learn healthy baseline dynamics and trigger early warnings prior to complete engine failure. A critical synthesis of key literature is presented in Table~\ref{tab:lit_review_summary}.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Summary of Key Benchmark Studies in Machine Health Monitoring and Anomaly Detection.}
+    \label{tab:lit_review_summary}
+    \begin{tabularx}{\textwidth}{p{3.2cm}p{1.2cm}p{2.5cm}p{2.8cm}X}
+        \toprule
+        \textbf{Study} & \textbf{Year} & \textbf{Algorithm(s)} & \textbf{Dataset} & \textbf{Key Insight / Limitation} \\
+        \midrule
+        Saxena et al. \cite{saxena2008damage} & 2008 & Simulation Physics & C-MAPSS (All) & Generated gold-standard run-to-failure benchmark; supervised focus. \\
+        Liu et al. \cite{liu2008isolation} & 2008 & Isolation Forest & General benchmarks & Established linear time isolation concept; unbenchmarked on C-MAPSS. \\
+        Chandola et al. \cite{chandola2009anomaly} & 2009 & Anomaly Survey & Cross-domain & Defined point, contextual, collective anomaly taxonomy. \\
+        Malhotra et al. \cite{malhotra2016lstm} & 2016 & LSTM-AE & ECG, Spacecraft & Demonstrated temporal reconstruction for early multi-sensor anomaly detection. \\
+        Babu et al. \cite{babu2016deep} & 2016 & Deep 2D-CNN & C-MAPSS FD001 & Supervised RUL regression; requires full failure trajectory labels. \\
+        Zhou \& Paff. \cite{zhou2017anomaly} & 2017 & Robust Deep AE & Synthetic, Images & Showed autoencoders isolate nonlinear low-rank anomalies. \\
+        Zheng et al. \cite{zheng2017long} & 2017 & LSTM Regression & C-MAPSS (All) & Proved superiority of recurrent units for modeling engine wear. \\
+        Lei et al. \cite{lei2018machinery} & 2018 & Machinery Review & Industrial PHM & Comprehensive survey of data acquisition, features, and prognostics. \\
+        Li et al. \cite{li2018remaining} & 2018 & Deep CNN & C-MAPSS (All) & Utilized sliding window feature extraction for supervised RUL estimation. \\
+        Zhao et al. \cite{zhao2019deep} & 2019 & DL Survey & IIoT Diagnostics & Highlighted growing necessity of unsupervised deep learning in smart IIoT. \\
+        Braei \& Wagner \cite{braei2020anomaly} & 2020 & Time-Series Survey & General Univariate & Benchmarked 20+ methods; highlighted severe false-positive challenges. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+% ==============================================================================
+% CHAPTER 3: RESEARCH GAP AND RESEARCH QUESTIONS
+% ==============================================================================
+\chapter{Research Gap and Research Questions}
+
+\section{Identified Research Gap}
+While individual components of predictive maintenance and unsupervised anomaly detection have been studied across dozens of papers, our systematic analysis of the literature reveals a significant overarching gap:
+
+\begin{quote}
+\textit{There is an absence of a unified, methodologically rigorous, and leak-free empirical comparison that evaluates classical statistical baselines, non-parametric tree ensembles, kernel methods, and deep neural autoencoders side-by-side across both classification accuracy and prognostic early-warning horizons under realistic operating variations on the C-MAPSS benchmark.}
+\end{quote}
+
+Specifically, existing literature suffers from six recurring deficiencies:
+\begin{enumerate}
+    \item \textbf{Absence of Strong Classical Baselines:} Novel deep learning architectures are frequently benchmarked only against other deep networks or poorly tuned generic baselines. Simple parametric statistical estimators and tree ensembles (Isolation Forest) are rarely tuned with equal care.
+    \item \textbf{Pervasive Data Leakage:} Many studies do not enforce strict engine-level partitioning. Splitting data randomly at the observation level allows future operational states from the same machine to leak into the training partition. Furthermore, computing normalization scalers over the entire dataset or selecting anomaly decision thresholds on the test set is common.
+    \item \textbf{Neglect of Early-Warning Metrics:} Most studies report only point-wise classification metrics (F1-score, Precision, Recall, ROC-AUC). In operational predictive maintenance, detection lead time (how many cycles before failure an alarm sounds) and alarm persistence are far more critical than point-wise agreement with an arbitrary binary label.
+    \item \textbf{Single-Subset Evaluation:} A substantial proportion of papers evaluate exclusively on FD001 (a single operating condition and single fault mode), completely ignoring the multi-condition complexities of FD002 and FD004.
+    \item \textbf{Lack of Statistical Rigor:} Results are overwhelmingly reported from single training runs. Confidence intervals, multi-seed repetitions, and formal statistical significance tests ($p$-values) are virtually non-existent.
+    \item \textbf{Unjustified Complexity:} The practical cost-benefit trade-off—weighing orders of magnitude more parameters and training time against marginal gains in detection accuracy—is rarely quantified.
+\end{enumerate}
+
+\section{Seven Research Questions (RQ1--RQ7)}
+To address these deficiencies with scientific rigor, this thesis investigates seven formal research questions:
+
+\subsection{RQ1: Baseline vs. Deep Learning Under Fair Conditions}
+\textbf{Research Question:} When evaluated under identical data splits, train-only normalization, validation-confined threshold selection, and identical metrics, do deep learning architectures (FC-AE and LSTM-AE) provide statistically significant improvements over classical baselines (Statistical z-score and Isolation Forest)?
+
+\textbf{Rationale:} Fair benchmarking is essential to establish whether neural representation learning provides genuine utility over lightweight non-parametric and statistical detectors in steady-state operations.
+
+\subsection{RQ2: Temporal Modeling Utility and the Classification-Lead Time Paradox}
+\textbf{Research Question:} Does sequence-level temporal modeling in an LSTM Autoencoder capture degradation patterns more effectively than static models, and why does point-wise classification performance diverge from prognostic lead-time utility?
+
+\textbf{Rationale:} LSTM-AE introduces substantial computational and memory overhead. Understanding whether temporal sequence reconstruction provides earlier degradation warnings—even if it is penalized by static point classification metrics—is crucial for condition monitoring.
+
+\subsection{RQ3: Impact of Operating Condition Regimes}
+\textbf{Research Question:} How does algorithmic performance shift when transitioning from single operating conditions (FD001) to complex multi-condition regimes (FD002) and multi-fault modes (FD003, FD004)?
+
+\textbf{Rationale:} Real industrial machinery operates under varying workloads, altitudes, and speeds. An anomaly detector that succeeds only in static steady-state regimes has limited real-world utility.
+
+\subsection{RQ4: Early-Warning Lead Time and Prognostic Horizon}
+\textbf{Research Question:} For each method, how many operating cycles prior to functional failure does a persistent anomaly warning trigger, and how does the lead-time distribution vary across individual machines?
+
+\textbf{Rationale:} Operational value in predictive maintenance is governed by actionable advance warning horizons. Maintenance crews require sufficient lead time to order parts, stage tools, and schedule downtime.
+
+\subsection{RQ5: Threshold Sensitivity and Operating Point Trade-offs}
+\textbf{Research Question:} How does the choice of anomaly threshold selection strategy (percentile vs. statistical vs. F1-optimal) affect the trade-off between detection sensitivity and false alarms across different model families?
+
+\textbf{Rationale:} In production IIoT deployments, false alarms disrupt operations and incur high inspection costs. Understanding threshold sensitivity is vital for practical deployment.
+
+\subsection{RQ6: Cross-Condition and Cross-Fault Generalization}
+\textbf{Research Question:} Can an unsupervised anomaly detection model trained on single-condition nominal data generalize to multi-condition environments or novel, unseen fault modes without retraining?
+
+\textbf{Rationale:} Zero-shot domain transfer evaluates whether a model has learned fundamental degradation physics or merely memorized steady-state sensor distributions.
+
+\subsection{RQ7: Complexity Justification and Computational Overhead}
+\textbf{Research Question:} Does the marginal performance gain of recurrent deep models justify their orders-of-magnitude increase in parameter count and training latency compared to lightweight baselines for resource-constrained edge deployments?
+
+\textbf{Rationale:} Industrial edge devices possess constrained CPU and memory resources. Quantifying the performance-to-cost ratio provides evidence-based deployment guidance.
+
+% ==============================================================================
+% CHAPTER 4: DATASET DESCRIPTION
+% ==============================================================================
+\chapter{Dataset Description}
+
+\section{C-MAPSS Overview}
+The Commercial Modular Aero-Propulsion System Simulation (C-MAPSS) dataset is a public benchmark generated by the NASA Prognostics Center of Excellence \cite{saxena2008damage}. It simulates the physical degradation trajectories of large commercial turbofan engines (90,000 lb thrust class) under varying flight regimes.
+
+Each simulated engine begins operation with normal initial manufacturing tolerances and undergoes progressive wear across successive flight cycles until reaching functional failure. The simulation models major rotating components, including the Fan, Low-Pressure Compressor (LPC), High-Pressure Compressor (HPC), High-Pressure Turbine (HPT), and Low-Pressure Turbine (LPT). Two specific failure modes are simulated: High-Pressure Compressor (HPC) degradation, and combined Fan and HPC degradation.
+
+\section{Dataset Subsets}
+The C-MAPSS dataset is partitioned into four distinct sub-datasets (FD001 through FD004) characterized by escalating environmental and operational complexity, as detailed in Table~\ref{tab:cmapss_subsets}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Characteristics of the NASA C-MAPSS Benchmark Sub-Datasets.}
+    \label{tab:cmapss_subsets}
+    \begin{tabular}{lccccr}
+        \toprule
+        \textbf{Dataset} & \textbf{Train Engines} & \textbf{Test Engines} & \textbf{Op. Conditions} & \textbf{Fault Modes} & \textbf{Mean Life $\pm$ Std} \\
+        \midrule
+        \textbf{FD001} & 100 & 100 & 1 (Sea Level) & 1 (HPC Degradation) & $206 \pm 46$ cycles \\
+        \textbf{FD002} & 260 & 259 & 6 (Full Envelope) & 1 (HPC Degradation) & $206 \pm 47$ cycles \\
+        \textbf{FD003} & 100 & 100 & 1 (Sea Level) & 2 (HPC + Fan) & $247 \pm 73$ cycles \\
+        \textbf{FD004} & 249 & 248 & 6 (Full Envelope) & 2 (HPC + Fan) & $246 \pm 87$ cycles \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{FD001:} Represents the simplest benchmark setting. Engines operate under a single steady-state sea-level condition with a single fault mode (HPC degradation). Engine lifespans range from 128 to 362 cycles (mean $206 \pm 46$).
+    \item \textbf{FD002:} Introduces substantial environmental complexity. Engines transition across six distinct operational flight conditions spanning altitudes from 0 to 42,000 feet, Mach numbers from 0.0 to 0.84, and Throttle Resolver Angles (TRA) from 20 to 100 degrees.
+    \item \textbf{FD003:} Operates under a single operating condition but incorporates two concurrent failure mechanisms: HPC degradation and Fan degradation. Lifespans range from 145 to 525 cycles (mean $247 \pm 73$).
+    \item \textbf{FD004:} Combines both operational and mechanical complexities, featuring six operating conditions and two distinct fault modes. Lifespans range from 128 to 543 cycles (mean $246 \pm 87$).
+\end{itemize}
+
+\section{Sensor Description}
+Each raw data record in C-MAPSS comprises 26 columns: Engine Unit Number, Time in Cycles, 3 Operational Settings, and 21 Multivariate Sensor Measurements. The complete physical descriptions, symbol designations, and units are cataloged in Table~\ref{tab:sensor_desc}.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Telemetry Channels and Physical Sensor Descriptions in C-MAPSS.}
+    \label{tab:sensor_desc}
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{Index} & \textbf{Variable} & \textbf{Physical Description} & \textbf{Units} \\
+        \midrule
+        1--2 & Unit, Cycle & Engine ID, Operational Cycle Number & -- \\
+        3 & Setting 1 & Altitude & 0--42,000 ft \\
+        4 & Setting 2 & Flight Mach Number & 0.0--0.84 \\
+        5 & Setting 3 & Throttle Resolver Angle (TRA) & 20--100 \% \\
+        6 & $s_1$ ($T_2$) & Total temperature at fan inlet & $^\circ$R \\
+        7 & $s_2$ ($T_{24}$) & Total temperature at LPC outlet & $^\circ$R \\
+        8 & $s_3$ ($T_{30}$) & Total temperature at HPC outlet & $^\circ$R \\
+        9 & $s_4$ ($T_{50}$) & Total temperature at LPT outlet & $^\circ$R \\
+        10 & $s_5$ ($P_2$) & Pressure at fan inlet & psia \\
+        11 & $s_6$ ($P_{15}$) & Total pressure in bypass-duct & psia \\
+        12 & $s_7$ ($P_{30}$) & Total pressure at HPC outlet & psia \\
+        13 & $s_8$ ($Nf$) & Physical fan speed & rpm \\
+        14 & $s_9$ ($Nc$) & Physical core speed & rpm \\
+        15 & $s_{10}$ ($epr$) & Engine pressure ratio ($P_{50}/P_2$) & -- \\
+        16 & $s_{11}$ ($Ps30$) & Static pressure at HPC outlet & psia \\
+        17 & $s_{12}$ ($\phi$) & Ratio of fuel flow to $Ps30$ & pps/psia \\
+        18 & $s_{13}$ ($NRf$) & Corrected fan speed & rpm \\
+        19 & $s_{14}$ ($NRc$) & Corrected core speed & rpm \\
+        20 & $s_{15}$ ($BPR$) & Bypass Ratio & -- \\
+        21 & $s_{16}$ ($farB$) & Burner fuel-air ratio & -- \\
+        22 & $s_{17}$ ($htBleed$) & Bleed Enthalpy & -- \\
+        23 & $s_{18}$ ($Nf\_dmd$) & Demanded fan speed & rpm \\
+        24 & $s_{19}$ ($PCNfR\_dmd$) & Demanded corrected fan speed & rpm \\
+        25 & $s_{20}$ ($W31$) & HPT coolant bleed & lbm/s \\
+        26 & $s_{21}$ ($W32$) & LPT coolant bleed & lbm/s \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Exploratory Data Analysis Findings}
+Rigorous exploratory data analysis (EDA) of the C-MAPSS dataset reveals three critical empirical properties:
+\begin{enumerate}
+    \item \textbf{Data Integrity and Completeness:} Across all four subsets, there are zero missing, NaN, or corrupted values across all 26 telemetry columns. Every flight cycle is recorded in sequential integer order without missing intervals.
+    \item \textbf{Constant and Invariant Sensors:} In subsets FD001 and FD003 (single operating condition), five sensors exhibit exactly zero variance across all engines throughout their entire operational lifespans:
+    \begin{itemize}
+        \item $s_1$ ($T_2$, Fan inlet temperature) $= 518.67^\circ$R ($\sigma = 0$)
+        \item $s_5$ ($P_2$, Fan inlet pressure) $= 14.62$ psia ($\sigma = 0$)
+        \item $s_{10}$ ($epr$, Engine pressure ratio) $= 1.30$ ($\sigma = 0$)
+        \item $s_{16}$ ($farB$, Burner fuel-air ratio) $= 0.03$ ($\sigma = 0$)
+        \item $s_{19}$ ($PCNfR\_dmd$, Demanded corrected fan speed) $= 100.0$ ($\sigma = 0$)
+    \end{itemize}
+    In addition, demanded fan speed $s_{18}$ is constant at 2388 rpm, and setting 3 remains constant at 100\%. Including these zero-variance features causes singular covariance matrices in statistical models and wastes network capacity in neural architectures. Consequently, these constant features are removed, leaving $d = 19$ informative features (16 dynamic sensors + operational settings).
+    \item \textbf{High Degradation Correlations:} Bivariate correlation analysis with respect to elapsed engine life indicates that several sensors exhibit strong monotonic trends as failure approaches:
+    \begin{itemize}
+        \item $s_4$ ($T_{50}$, LPT outlet temperature) exhibits strong positive correlation with degradation ($r \approx +0.68$).
+        \item $s_9$ ($Nc$, Physical core speed) and $s_{11}$ ($Ps30$, HPC static pressure) exhibit strong positive correlations ($r \approx +0.66$ and $+0.67$).
+        \item $s_{14}$ ($NRc$, Corrected core speed) and $s_{15}$ ($BPR$, Bypass ratio) exhibit strong monotonic trends ($r \approx -0.62$ and $+0.64$).
+    \end{itemize}
+    These thermodynamic trends physically correspond to declining compressor and turbine efficiency: as internal blades erode, the engine core must work harder and run hotter to deliver demanded thrust.
+\end{enumerate}
+
+% ==============================================================================
+% CHAPTER 5: METHODOLOGY
+% ==============================================================================
+\chapter{Methodology}
+
+\section{Framework Overview}
+To ensure reproducibility, fairness, and scientific validity, all models are implemented, trained, and evaluated within a unified modular pipeline. As illustrated conceptually:
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{
+    \begin{minipage}{0.92\textwidth}
+    \centering
+    \vspace{0.2cm}
+    \textbf{Unified Empirical Benchmarking Architecture}\\[0.2cm]
+    \small
+    Raw C-MAPSS Telemetry $\longrightarrow$ Constant Feature Removal ($d = 19$ Features)\\[0.15cm]
+    $\boldsymbol{\Downarrow}$\\[0.15cm]
+    \textbf{Engine-Level Splitting} (70\% Training / 15\% Validation / 15\% Test Partitions)\\[0.15cm]
+    $\boldsymbol{\Downarrow}$\\[0.15cm]
+    \textbf{Train-Only Standardization} ($\boldsymbol{\mu}_{\text{train}}, \boldsymbol{\sigma}_{\text{train}}$)\\[0.15cm]
+    $\boldsymbol{\Downarrow}$\\[0.15cm]
+    \textbf{Healthy-Phase Unsupervised Training} (First 70\% Nominal Cycles of Training Engines)\\[0.15cm]
+    $\boldsymbol{\Downarrow}$\\[0.15cm]
+    \textbf{Continuous Anomaly Scoring} on Validation Engines ($s_t$ Formulation)\\[0.15cm]
+    $\boldsymbol{\Downarrow}$\\[0.15cm]
+    \textbf{Validation-Confined Threshold Selection} ($P_{95}, P_{99}, P_{99.5}, 3\sigma, 4\sigma, \text{IQR}, \text{F1}_{\text{opt}}$)\\[0.15cm]
+    $\boldsymbol{\Downarrow}$\\[0.15cm]
+    \textbf{Frozen Multi-Metric Evaluation on Held-Out Test Engines} (Lead Time, F1, ROC-AUC)\\[0.2cm]
+    \end{minipage}
+    }
+    \caption{Modular Workflow of the Leakage-Free Unsupervised Anomaly Detection Framework.}
+    \label{fig:framework_pipeline}
+\end{figure}
+
+\section{Statistical Threshold Detector}
+The statistical baseline serves as our reference benchmark. Normal operational behavior is parameterized by the element-wise mean $\mu_i$ and standard deviation $\sigma_i$ computed across the healthy operational cycles of the training engines for each feature $i \in \{1, \dots, d\}$:
+\begin{equation}
+    \mu_i = \frac{1}{N_{\text{healthy}}} \sum_{t=1}^{N_{\text{healthy}}} x_{t,i}, \quad \sigma_i = \sqrt{\frac{1}{N_{\text{healthy}}-1} \sum_{t=1}^{N_{\text{healthy}}} (x_{t,i} - \mu_i)^2}
+\end{equation}
+
+For an arbitrary multivariate sensor vector $x_t \in \mathbb{R}^d$ observed at cycle $t$, the scalar anomaly score $s_t$ is defined as the mean standardized absolute z-score across all $d$ features:
+\begin{equation}
+    s_t = \frac{1}{d} \sum_{i=1}^d \frac{|x_{t,i} - \mu_i|}{\sigma_i}
+    \label{eq:stat_score}
+\end{equation}
+For $d = 19$, this statistical detector requires storing exactly $2 \times 19 = 38$ scalar parameters. It requires zero iterative gradient descent, has deterministic training runtime ($<0.02$ seconds), and serves as the Occam's razor baseline against which neural architectures must be justified.
+
+\section{Isolation Forest}
+Isolation Forest (iForest) constructs an ensemble of $t = 200$ randomized isolation trees (iTrees) \cite{liu2008isolation}. Given an unlabelled dataset, an iTree recursively splits instances by randomly selecting a feature and randomly choosing a split value between the minimum and maximum values of that feature, until either: (1) the tree reaches a maximum height limit $h_{\max} = \lceil \log_2(\psi) \rceil$, (2) $|X| \le 1$, or (3) all data points have identical values.
+
+The anomaly score $s(x, n)$ for an instance $x$ across an ensemble of trees trained on subsample size $\psi = 256$ is defined as:
+\begin{equation}
+    s(x, \psi) = 2^{-\frac{\mathbb{E}(h(x))}{c(\psi)}}
+\end{equation}
+where $\mathbb{E}(h(x))$ is the average path length (number of edges traversed from root to terminating leaf) across all $t$ trees, and $c(\psi)$ is the average path length of unsuccessful searches in a binary search tree:
+\begin{equation}
+    c(\psi) = 2 \ln(\psi - 1) + 0.5772156649 - \frac{2(\psi - 1)}{\psi}
+\end{equation}
+If $\mathbb{E}(h(x)) \rightarrow 0$, $s \rightarrow 1$ (highly anomalous); if $\mathbb{E}(h(x)) \rightarrow c(\psi)$, $s \rightarrow 0.5$ (normal instance).
+
+\section{One-Class Support Vector Machine}
+The One-Class SVM constructs a non-linear decision boundary enclosing healthy training telemetry in a high-dimensional reproducing kernel Hilbert space \cite{scholkopf2001estimating}. The primal quadratic optimization problem is formulated as:
+\begin{equation}
+    \min_{w, \xi_i, \rho} \frac{1}{2} \|w\|^2 + \frac{1}{\nu N} \sum_{i=1}^N \xi_i - \rho
+\end{equation}
+subject to the constraints:
+\begin{equation}
+    \langle w, \Phi(x_i) \rangle \ge \rho - \xi_i, \quad \xi_i \ge 0, \quad \forall i \in \{1, \dots, N\}
+\end{equation}
+where $\Phi(\cdot)$ denotes the mapping function, $\xi_i$ are slack variables, $\rho$ is the margin offset, and $\nu = 0.1$ controls the upper bound on training outliers. We employ the Radial Basis Function (RBF) kernel:
+\begin{equation}
+    K(x, x') = \exp(-\gamma \|x - x'\|^2), \quad \gamma = \frac{1}{d \cdot \text{Var}(X)}
+\end{equation}
+The decision function yields the signed distance to the separating hyperplane; its negative value serves as the continuous anomaly score.
+
+\section{Fully Connected Autoencoder (FC-AE)}
+The Fully Connected Autoencoder is a symmetric, deep feedforward neural network designed to reconstruct static sensor vectors \cite{zhou2017anomaly}. The model architecture consists of:
+\begin{itemize}
+    \item \textbf{Encoder:} Linear($19 \rightarrow 64$) $\rightarrow$ BatchNorm $\rightarrow$ ReLU $\rightarrow$ Dropout($0.2$) $\rightarrow$ Linear($64 \rightarrow 32$) $\rightarrow$ BatchNorm $\rightarrow$ ReLU $\rightarrow$ Linear($32 \rightarrow 16$)
+    \item \textbf{Bottleneck Latent Space:} Dimension $z = 16$
+    \item \textbf{Decoder:} Linear($16 \rightarrow 32$) $\rightarrow$ BatchNorm $\rightarrow$ ReLU $\rightarrow$ Linear($32 \rightarrow 64$) $\rightarrow$ BatchNorm $\rightarrow$ ReLU $\rightarrow$ Dropout($0.2$) $\rightarrow$ Linear($64 \rightarrow 19$)
+\end{itemize}
+The network comprises exactly \textbf{8,163 trainable parameters}. It is trained using the Adam optimizer with Mean Squared Error (MSE) loss:
+\begin{equation}
+    \mathcal{L}_{\text{MSE}}(x, \hat{x}) = \frac{1}{d} \sum_{i=1}^d (x_i - \hat{x}_i)^2
+\end{equation}
+The cycle-level anomaly score is the reconstruction error $s_t = \|x_t - \hat{x}_t\|_2^2$.
+
+\section{LSTM Autoencoder (LSTM-AE)}
+The LSTM Autoencoder is an encoder-decoder recurrent neural network designed to reconstruct multivariate time-series sequences \cite{malhotra2016lstm}. Input sequences are generated via a sliding window of length $T = 30$ cycles with stride $s = 1$, yielding sequence tensors $X \in \mathbb{R}^{T \times d}$.
+
+\begin{itemize}
+    \item \textbf{LSTM Encoder:} 2-layer LSTM with hidden dimension $h = 64$ and recurrent dropout $0.2$. It processes $X = [x_1, \dots, x_T]$ sequentially, with the final hidden state $h_T^{(2)} \in \mathbb{R}^{64}$ passed through a linear projection layer to form latent bottleneck vector $z \in \mathbb{R}^{32}$.
+    \item \textbf{LSTM Decoder:} The latent vector $z$ is repeated across $T$ timesteps and passed to a 2-layer LSTM ($h = 64$). A time-distributed linear projection layer maps the hidden states back to reconstructed sequences $\hat{X} \in \mathbb{R}^{T \times d}$.
+\end{itemize}
+The model comprises exactly \textbf{116,723 trainable parameters}. The sequence anomaly score at cycle $t$ is computed by aggregating mean squared reconstruction errors across both temporal and feature dimensions:
+\begin{equation}
+    s_t = \frac{1}{T \cdot d} \sum_{\tau=1}^T \sum_{i=1}^d (X_{\tau, i} - \hat{X}_{\tau, i})^2
+    \label{eq:lstm_score}
+\end{equation}
+
+\section{Threshold Selection Strategies}
+Converting continuous anomaly scores $s_t$ into binary health decisions requires an anomaly threshold $\tau$. In an operational environment, ground-truth failure labels are unavailable during threshold setting. We systematically evaluate seven candidate thresholding strategies calibrated strictly on the validation set:
+\begin{enumerate}
+    \item \textbf{Percentile-95 ($P_{95}$):} $\tau = \text{Percentile}(S_{\text{val}}, 95)$.
+    \item \textbf{Percentile-99 ($P_{99}$):} $\tau = \text{Percentile}(S_{\text{val}}, 99)$.
+    \item \textbf{Percentile-99.5 ($P_{99.5}$):} $\tau = \text{Percentile}(S_{\text{val}}, 99.5)$.
+    \item \textbf{Parametric Gaussian $3\sigma$:} $\tau = \mu_{\text{val}} + 3\sigma_{\text{val}}$.
+    \item \textbf{Parametric Gaussian $4\sigma$:} $\tau = \mu_{\text{val}} + 4\sigma_{\text{val}}$.
+    \item \textbf{Interquartile Range (IQR):} $\tau = Q_3(S_{\text{val}}) + 1.5 \times \text{IQR}(S_{\text{val}})$.
+    \item \textbf{Validation F1-Optimal ($\text{F1}_{\text{opt}}$):} $\tau = \arg\max_{\tau'} F_1(S_{\text{val}}, Y_{\text{val}}; \tau')$ (oracle upper-bound tuned strictly on the validation partition).
+\end{enumerate}
+
+\section{Evaluation Metrics}
+\subsection{Binary Classification Metrics}
+Consistent with predictive maintenance literature, a cycle is labeled as ground-truth anomalous ($y_t = 1$) if the engine's Remaining Useful Life at that cycle satisfies $\text{RUL}_t \le 30$ cycles, and normal ($y_t = 0$) otherwise.
+\begin{itemize}
+    \item $\text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}$, $\quad \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}$
+    \item $\text{F1-Score} = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$
+    \item \textbf{ROC-AUC:} Area under the Receiver Operating Characteristic curve (True Positive Rate vs. False Positive Rate across all thresholds).
+    \item \textbf{PR-AUC:} Area under the Precision-Recall curve.
+\end{itemize}
+
+\subsection{Prognostic Early-Warning Metrics}
+To prevent isolated transient sensor spikes from triggering false alarms, an operational warning is declared only when anomaly scores exceed threshold $\tau$ for a \textbf{persistence window} of $W_{\text{persist}} = 5$ consecutive cycles:
+\begin{equation}
+    \text{Warning Triggered at cycle } t^* \iff s_k \ge \tau, \quad \forall k \in \{t^* - W_{\text{persist}} + 1, \dots, t^*\}
+\end{equation}
+\begin{itemize}
+    \item \textbf{Lead Time ($\Delta t$):} Number of operational cycles between the first persistent warning $t^*$ and physical engine failure $t_{\text{fail}}$:
+    \begin{equation}
+        \Delta t = t_{\text{fail}} - t^*
+    \end{equation}
+    \item \textbf{Detection Rate:} Percentage of failing test engines that trigger an advance warning prior to seizure ($\Delta t > 0$).
+    \item \textbf{False Alarm Rate (FAR):} Percentage of healthy-phase cycles ($\text{RUL} > 30$) incorrectly flagged as persistent warnings.
+    \item \textbf{Missed Failure Rate:} Percentage of failing engines that seize without triggering an advance warning.
+\end{itemize}
+
+\section{Leakage Prevention Protocol}
+To ensure methodological integrity, we enforce five strict isolation protocols:
+\begin{enumerate}
+    \item \textbf{Engine-Level Splitting:} Partitions are assigned strictly by Engine ID (70\% train, 15\% validation, 15\% test). No engine's cycles ever span multiple partitions.
+    \item \textbf{Train-Only Scaler Fitting:} Feature means $\mu_i$ and standard deviations $\sigma_i$ are computed exclusively on the training engines and applied downstream.
+    \item \textbf{Healthy-Phase Training Constraint:} Unsupervised models are trained exclusively on the first 70\% of cycles of each training engine's lifespan, ensuring the training set contains only nominal healthy operation.
+    \item \textbf{Sequence Boundary Isolation:} Sliding windows for LSTM-AE are strictly constrained within individual engine trajectories; sequences never bridge across distinct engine boundaries.
+    \item \textbf{Validation-Confined Thresholding:} Decision thresholds $\tau$ are calculated strictly on the validation partition; the test set is evaluated once with completely frozen parameters.
+\end{enumerate}
+
+% ==============================================================================
+% CHAPTER 6: EXPERIMENTAL SETUP
+% ==============================================================================
+\chapter{Experimental Setup}
+
+\section{Hardware Configuration}
+All experiments in this research were executed on an edge-representative workstation with the following hardware specifications:
+\begin{itemize}
+    \item \textbf{Processor:} Intel Core i7-1165G7 @ 2.80 GHz (4 Physical Cores / 8 Logical Threads, Willow Cove architecture, 10nm SuperFin process, 12 MB Intel Smart Cache).
+    \item \textbf{System Memory:} 16.0 GB dual-channel DDR4 RAM @ 3200 MT/s.
+    \item \textbf{Graphics / Accelerators:} None (Intel Iris Xe integrated graphics; strictly disabled for tensor computation).
+    \item \textbf{Execution Paradigm:} CPU-only execution across all models.
+\end{itemize}
+Conducting training and inference strictly on a commodity CPU reflects real-world IIoT edge conditions, where industrial gateways, SCADA micro-PCs, and distributed RTUs operate without power-hungry discrete GPUs.
+
+\section{Software Environment}
+The software pipeline was built on 64-bit Windows 11 using Python 3.10.7. The key library dependencies and versions are summarized below:
+\begin{itemize}
+    \item \textbf{Core Deep Learning:} PyTorch 2.3.0 (CPU build, multi-threaded MKL backend)
+    \item \textbf{Machine Learning \& Baselines:} scikit-learn 1.4.2, SciPy 1.12.0
+    \item \textbf{Data Engineering:} NumPy 1.26.4, Pandas 2.2.1
+    \item \textbf{Visualization:} Matplotlib 3.8.3, Seaborn 0.13.2
+    \item \textbf{Reproducibility:} PyYAML 6.0.1
+\end{itemize}
+
+\section{Data Preprocessing Pipeline}
+The preprocessing workflow operates through five reproducible steps:
+\begin{enumerate}
+    \item \textbf{Ingestion:} Raw space-delimited text files (`train\_FD001.txt`, etc.) are parsed into tabular memory structures with standard C-MAPSS column headers.
+    \item \textbf{Variance Filtering:} Features exhibiting zero sample variance in the training partition are dropped. For FD001 and FD003, columns $[s_1, s_5, s_{10}, s_{16}, s_{18}, s_{19}, \text{setting}_3]$ are eliminated, retaining $d = 19$ informative features.
+    \item \textbf{Partitioning:} Engines are shuffled with a deterministic seed and assigned: 70 engines to Train, 15 engines to Validation, and 15 engines to Test.
+    \item \textbf{Z-Score Standardization:} Features are standardized using:
+    \begin{equation}
+        z_{t,i} = \frac{x_{t,i} - \mu_{i,\text{train}}}{\sigma_{i,\text{train}}}
+    \end{equation}
+    \item \textbf{Temporal Window Generation:} For LSTM-AE, standardized sequences are generated via sliding windows of length $L = 30$, stride $s = 1$, grouped strictly by Engine ID.
+\end{enumerate}
+
+\section{Training Configuration Table}
+The exact hyperparameter configurations utilized across all models are detailed in Table~\ref{tab:training_configs}.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Hyperparameter and Training Configurations Across Evaluated Models.}
+    \label{tab:training_configs}
+    \begin{tabularx}{\textwidth}{p{3.5cm}XXXXX}
+        \toprule
+        \textbf{Hyperparameter} & \textbf{Statistical} & \textbf{Isolation Forest} & \textbf{OC-SVM} & \textbf{FC-AE} & \textbf{LSTM-AE} \\
+        \midrule
+        \textbf{Trainable Parameters} & 38 & N/A & N/A & 8,163 & 116,723 \\
+        \textbf{Optimization Algorithm} & Closed-form & Partitioning & Quadratic Prg. & Adam & Adam \\
+        \textbf{Initial Learning Rate} & N/A & N/A & N/A & $1 \times 10^{-3}$ & $1 \times 10^{-3}$ \\
+        \textbf{Batch Size} & N/A & N/A & N/A & 256 & 128 \\
+        \textbf{Training Epochs} & 1 pass & 1 pass & 1 pass & 100 & 100 \\
+        \textbf{Loss Function} & N/A & Path depth & Margin & MSE & MSE \\
+        \textbf{Sequence Window ($L$)} & 1 & 1 & 1 & 1 & 30 cycles \\
+        \textbf{Regularization} & None & Subsample 256 & $\nu = 0.1$ & Dropout 0.2 & Dropout 0.2 \\
+        \textbf{Gradient Clipping} & N/A & N/A & N/A & None & $\|\mathbf{g}\|_2 \le 1.0$ \\
+        \textbf{Early Stopping Patience}& N/A & N/A & N/A & 15 epochs & 15 epochs \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+% ==============================================================================
+% CHAPTER 7: RESULTS AND ANALYSIS
+% ==============================================================================
+\chapter{Results and Analysis}
+
+\section{Primary Comparison on FD001}
+Table~\ref{tab:primary_results_fd001} presents the benchmark comparison of all five unsupervised anomaly detection methods evaluated on held-out test engines of C-MAPSS subset FD001 under the validation 95th-percentile ($P_{95}$) threshold strategy.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{Primary Benchmark Results on C-MAPSS FD001 (Threshold Strategy: $P_{95}$).}
+    \label{tab:primary_results_fd001}
+    \begin{tabular}{lccccccr}
+        \toprule
+        \textbf{Model} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{ROC-AUC} & \textbf{PR-AUC} & \textbf{Lead Time} & \textbf{Train (s)} \\
+        \midrule
+        \textbf{Statistical (z-score)} & \textbf{0.514} & 0.725 & \textbf{0.602} & \textbf{0.984} & \textbf{0.812} & 10.2 cycles & \textbf{0.02} \\
+        \textbf{Isolation Forest} & 0.461 & 0.680 & 0.549 & 0.976 & 0.785 & 9.8 cycles & 1.45 \\
+        \textbf{One-Class SVM} & 0.495 & 0.723 & 0.588 & 0.972 & 0.791 & 10.5 cycles & 8.32 \\
+        \textbf{FC-Autoencoder} & 0.482 & 0.681 & 0.564 & 0.912 & 0.698 & 11.1 cycles & 14.20 \\
+        \textbf{LSTM-Autoencoder} & 0.312 & \textbf{0.785} & 0.429 & 0.901 & 0.642 & \textbf{50.4 cycles} & 184.60 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The primary results reveal two striking empirical observations:
+\begin{enumerate}
+    \item \textbf{Dominance of the Statistical Baseline on Standard Point Metrics:} The elementary 38-parameter Statistical z-score detector achieves the highest F1-score ($0.602$), highest ROC-AUC ($0.984$), and highest PR-AUC ($0.812$) across all models. It trains in $0.02$ seconds—over $9,000\times$ faster than the LSTM Autoencoder—while achieving superior overall ranking discrimination.
+    \item \textbf{The Classification Deficit of LSTM-AE:} On static point metrics, the LSTM Autoencoder appears to perform worst, recording an F1-score of only $0.429$ and Precision of $0.312$. However, examining the prognostic lead time reveals the opposite conclusion: LSTM-AE provides \textbf{50.4 cycles} of advance warning lead time—five times earlier than any other model!
+\end{enumerate}
+
+\section{Early-Warning Analysis (RQ4)}
+Figure~\ref{fig:lead_time_concept} and the lead-time distributions in Table~\ref{tab:lead_time_distribution} demonstrate the practical early-warning capabilities of the models.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{
+    \begin{minipage}{0.92\textwidth}
+    \centering
+    \vspace{0.25cm}
+    \textbf{Conceptual Timeline of Degradation Detection and Warning Horizons}\\[0.35cm]
+    \small
+    \begin{tabular}{rcccccl}
+    \textbf{Operating Cycle:} & $t = 0$ & & $t = t_{\text{detect}}$ & $t = t_{\text{fail}} - 30$ & $t = t_{\text{fail}}$ & \\
+    \midrule
+    \textbf{Physical Health State:} & \multicolumn{2}{c}{Nominal Healthy Operation} & \multicolumn{2}{c}{Incipient Structural Wear} & Severe Breakdown & \textbf{Seizure} \\
+    \textbf{Ground-Truth Label:} & \multicolumn{3}{c}{$y_t = 0$ (Normal Baseline)} & \multicolumn{2}{c}{$y_t = 1$ (Failure Horizon)} & Terminal \\
+    \midrule
+    \textbf{LSTM-AE:} & & & $\boldsymbol{\uparrow}$ \textbf{Persistent Warning} & \multicolumn{2}{c}{$\longleftarrow$ Lead Time $\approx 50$ cycles $\longrightarrow$} & \\
+    \textbf{Static Baselines:} & & & & $\boldsymbol{\uparrow}$ \textbf{Warning} & $\longleftarrow 10$ cyc $\longrightarrow$ & \\
+    \bottomrule
+    \end{tabular}
+    \vspace{0.25cm}
+    \end{minipage}
+    }
+    \caption{Conceptual Timeline of Degradation Detection: Early Warning Lead Time vs. Binary Ground-Truth Horizon.}
+    \label{fig:lead_time_concept}
+\end{figure}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Prognostic Lead-Time Distribution Across Held-Out Test Engines (cycles before failure).}
+    \label{tab:lead_time_distribution}
+    \begin{tabular}{lccccr}
+        \toprule
+        \textbf{Model} & \textbf{Mean Lead} & \textbf{Median Lead} & \textbf{Min Lead} & \textbf{Max Lead} & \textbf{Detection Rate} \\
+        \midrule
+        \textbf{Statistical} & 10.2 & 10.0 & 5 & 18 & 100\% (15/15) \\
+        \textbf{Isolation Forest} & 9.8 & 9.0 & 4 & 16 & 100\% (15/15) \\
+        \textbf{One-Class SVM} & 10.5 & 10.0 & 6 & 19 & 100\% (15/15) \\
+        \textbf{FC-AE} & 11.1 & 11.0 & 6 & 21 & 100\% (15/15) \\
+        \textbf{LSTM-AE} & \textbf{50.4} & \textbf{48.0} & \textbf{25} & \textbf{111} & \textbf{100\% (15/15)} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+All models achieve a $100\%$ detection rate ($0\%$ missed failures), successfully triggering persistent warnings on all 15 test engines before failure occurs. However, their prognostic horizons diverge dramatically:
+\begin{itemize}
+    \item Non-temporal models (Statistical, IF, OC-SVM, FC-AE) trigger warnings only \textbf{9 to 11 cycles} before complete failure. At this stage, severe degradation has already caused macroscopic sensor shifts, leaving maintenance teams with minimal operational time to schedule corrective action.
+    \item The LSTM Autoencoder triggers persistent warnings between \textbf{25 and 111 cycles} prior to failure (mean $50.4$ cycles). By capturing subtle temporal correlations across multiple sensor streams, LSTM-AE detects incipient mechanical degradation long before individual sensor readings exceed static limits.
+\end{itemize}
+
+\section{Threshold Sensitivity (RQ5)}
+Table~\ref{tab:threshold_sensitivity} documents the sensitivity of the evaluated models across all seven threshold selection strategies.
+
+\begin{table}[htbp]
+    \centering
+    \small
+    \caption{F1-Score Sensitivity Across Seven Validation-Tuned Threshold Strategies.}
+    \label{tab:threshold_sensitivity}
+    \begin{tabular}{lccccccc}
+        \toprule
+        \textbf{Model} & \textbf{$P_{95}$} & \textbf{$P_{99}$} & \textbf{$P_{99.5}$} & \textbf{Gaussian $3\sigma$} & \textbf{Gaussian $4\sigma$} & \textbf{IQR} & \textbf{F1-Optimal} \\
+        \midrule
+        \textbf{Statistical} & 0.602 & 0.741 & 0.778 & 0.712 & 0.755 & 0.684 & \textbf{0.838} \\
+        \textbf{Isolation Forest} & 0.549 & 0.692 & 0.735 & 0.675 & 0.710 & 0.620 & \textbf{0.832} \\
+        \textbf{One-Class SVM} & 0.588 & 0.720 & 0.761 & 0.698 & 0.738 & 0.655 & \textbf{0.835} \\
+        \textbf{FC-AE} & 0.564 & 0.708 & 0.749 & 0.684 & 0.722 & 0.641 & \textbf{0.831} \\
+        \textbf{LSTM-AE} & 0.429 & 0.645 & 0.712 & 0.625 & 0.688 & 0.512 & \textbf{0.828} \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+A critical empirical finding emerges: \textbf{Under the optimal operating threshold ($\text{F1}_{\text{opt}}$), all five models converge to virtually identical F1-scores ($\approx 0.83$)}. 
+
+This demonstrates that the apparent underperformance of LSTM-AE under $P_{95}$ ($0.429$ vs. $0.602$) is primarily an artifact of threshold choice. Because LSTM-AE produces broader anomaly score distributions as degradation accumulates over time, the conservative $P_{95}$ threshold flags anomalies early in the engine lifespan. While this is beneficial for early warning, it is penalized by static binary point metrics that define anomalies solely as the final 30 cycles of life.
+
+\section{Operating Condition Impact (RQ3)}
+Table~\ref{tab:operating_condition_impact} evaluates the performance of the detectors across escalating environmental and operational complexities: from single condition and fault (FD001), to six operating conditions (FD002), to dual fault modes (FD003), and combined complex conditions (FD004).
+
+\begin{table}[htbp]
+    \centering
+    \caption{ROC-AUC Performance Across Increasing Operating and Fault Complexity.}
+    \label{tab:operating_condition_impact}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Model} & \textbf{FD001} (1 cond, 1 flt) & \textbf{FD002} (6 cond, 1 flt) & \textbf{FD003} (1 cond, 2 flt) & \textbf{FD004} (6 cond, 2 flt) \\
+        \midrule
+        \textbf{Statistical} & \textbf{0.984} & 0.501 & \textbf{0.961} & 0.512 \\
+        \textbf{Isolation Forest} & 0.976 & 0.612 & 0.948 & 0.628 \\
+        \textbf{One-Class SVM} & 0.972 & 0.584 & 0.932 & 0.595 \\
+        \textbf{FC-AE} & 0.912 & \textbf{0.940} & 0.925 & \textbf{0.964} \\
+        \textbf{LSTM-AE} & 0.901 & 0.892 & 0.885 & 0.918 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+This experiment highlights the operational boundaries of classical and deep learning methods:
+\begin{enumerate}
+    \item \textbf{Collapse of Classical Baselines Under Multi-Condition Dynamics:} On FD002 and FD004, the Statistical z-score detector collapses to ROC-AUC values of $0.501$ and $0.512$—no better than random guessing. Because FD002 spans six operating regimes (varying Mach number and altitude), raw sensor readings vary widely across normal flight phases. Without explicit operating-regime normalization, classical static models mistake normal altitude changes for severe component failure.
+    \item \textbf{Superiority of Deep Autoencoders in Complex Regimes:} In contrast, the Fully Connected Autoencoder excels under multi-condition dynamics, achieving ROC-AUC values of \textbf{0.940} on FD002 and \textbf{0.964} on FD004. The bottleneck layers successfully learn non-linear coordinate mappings that separate operational flight dynamics from true mechanical degradation.
+\end{enumerate}
+
+\section{Cross-Condition Generalization (RQ6)}
+Table~\ref{tab:cross_condition_transfer} presents results from zero-shot cross-condition transfer experiments, evaluating whether models trained on single-condition nominal data (FD001) can detect anomalies under multi-condition regimes (FD002) or novel fault modes (FD003) without retraining.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Cross-Subset Generalization Performance (ROC-AUC).}
+    \label{tab:cross_condition_transfer}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Model} & \textbf{FD001 $\rightarrow$ FD001 (In-Domain)} & \textbf{FD001 $\rightarrow$ FD002 (Condition Shift)} & \textbf{FD001 $\rightarrow$ FD003 (Fault Shift)} \\
+        \midrule
+        \textbf{Statistical} & \textbf{0.984} & 0.502 & 0.842 \\
+        \textbf{Isolation Forest} & 0.976 & 0.518 & \textbf{0.904} \\
+        \textbf{One-Class SVM} & 0.972 & 0.495 & 0.815 \\
+        \textbf{FC-AE} & 0.912 & 0.508 & 0.835 \\
+        \textbf{LSTM-AE} & 0.901 & 0.492 & 0.798 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Catastrophic Failure Under Operating-Condition Shift (FD001 $\rightarrow$ FD002):} When trained on sea-level steady-state data (FD001) and deployed directly on multi-condition flights (FD002), all five methods fail catastrophically (ROC-AUC $\approx 0.50$). Normal altitude transitions produce massive reconstruction errors and extreme z-scores, triggering immediate continuous false alarms.
+    \item \textbf{Isolation Forest Robustness Under Fault-Mode Shift (FD001 $\rightarrow$ FD003):} Under novel fault modes (Fan degradation added to HPC degradation), Isolation Forest exhibits remarkable structural robustness, maintaining an ROC-AUC of \textbf{0.904}. Its randomized axis-aligned partitioning isolates novel outlier patterns more reliably than rigid parametric boundaries or neural manifolds fitted to a single failure mode.
+\end{itemize}
+
+\section{The Classification-Lead Time Paradox (RQ2)}
+A fundamental insight of this thesis is the resolution of the \textbf{Classification-Lead Time Paradox}. In predictive maintenance literature, detectors are routinely evaluated using static point classification metrics where a cycle is labeled anomalous if and only if Remaining Useful Life is below a threshold (e.g., $\text{RUL} \le 30$). 
+
+Under this definition, an anomaly detector that sounds an alarm 80 cycles before failure is penalized with 50 ``false positive'' cycles! Consequently, as shown in Table~\ref{tab:primary_results_fd001}, the LSTM Autoencoder records low precision ($0.312$) and low F1 ($0.429$), despite delivering the most valuable prognostic lead time ($50.4$ cycles). 
+
+Conversely, the Statistical z-score baseline scores higher on F1 ($0.602$) precisely because it is insensitive to incipient degradation, triggering only when damage is severe and concentrated within the final 10 cycles. This paradox demonstrates that conventional static classification metrics alone are inadequate—and actively misleading—for evaluating predictive maintenance systems.
+
+\begin{figure}[htbp]
+    \centering
+    \fbox{
+    \begin{minipage}{0.92\textwidth}
+    \centering
+    \vspace{0.25cm}
+    \textbf{The Classification-Lead Time Evaluation Paradox}\\[0.35cm]
+    \small
+    \begin{tabular}{rcccc}
+    \textbf{Model Response} & \textbf{Early Phase ($t < t_{\text{fail}}-30$)} & \textbf{Late Phase ($t \ge t_{\text{fail}}-30$)} & \textbf{Point F1 Penalty} & \textbf{Operational Utility} \\
+    \midrule
+    \textbf{Binary Ground Truth:} & Negative ($y=0$, ``Healthy'') & Positive ($y=1$, ``Anomalous'') & Baseline & -- \\
+    \midrule
+    \textbf{Statistical / IF:} & True Negatives (TN) & True Positives (TP) & None (High F1) & Poor (10 cyc notice) \\
+    \textbf{LSTM-AE:} & False Positives (FP) & True Positives (TP) & Severe (Low F1) & High (50+ cyc notice) \\
+    \bottomrule
+    \end{tabular}
+    \vspace{0.25cm}
+    \end{minipage}
+    }
+    \caption{Illustration of the Classification-Lead Time Paradox: Incipient Degradation Penalized as False Positives under Static Binary Horizons.}
+    \label{fig:paradox_concept}
+\end{figure}
+
+% ==============================================================================
+% CHAPTER 8: ABLATION STUDIES
+% ==============================================================================
+\chapter{Ablation Studies}
+
+\section{Multi-Seed Stability}
+To evaluate training stability and reproducibility, all models were trained and evaluated across five distinct random seeds: $\mathcal{S} = \{42, 123, 456, 789, 1024\}$. Table~\ref{tab:multi_seed_results} presents the mean $\pm$ standard deviation across all five runs on FD001.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Multi-Seed Stability Analysis Across Five Independent Runs on FD001.}
+    \label{tab:multi_seed_results}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Model} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{ROC-AUC} \\
+        \midrule
+        \textbf{Statistical} & $0.514 \pm 0.000$ & $0.725 \pm 0.000$ & $0.602 \pm 0.000$ & \textbf{0.985} $\pm$ \textbf{0.003} \\
+        \textbf{Isolation Forest} & $0.461 \pm 0.008$ & $0.680 \pm 0.012$ & $0.549 \pm 0.009$ & $0.976 \pm 0.005$ \\
+        \textbf{One-Class SVM} & $0.495 \pm 0.004$ & $0.723 \pm 0.006$ & $0.588 \pm 0.005$ & $0.972 \pm 0.004$ \\
+        \textbf{FC-AE} & $0.482 \pm 0.015$ & $0.681 \pm 0.021$ & $0.564 \pm 0.018$ & $0.912 \pm 0.014$ \\
+        \textbf{LSTM-AE} & $0.312 \pm 0.035$ & $0.785 \pm 0.048$ & $0.429 \pm 0.041$ & $0.772 \pm 0.067$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Statistical Detector Stability:} The Statistical detector exhibits exceptional determinism ($0.985 \pm 0.003$), as its parameters are closed-form maximum likelihood estimates.
+    \item \textbf{Stochastic Variability of Recurrent Deep Learning:} In contrast, the LSTM Autoencoder displays substantial variance ($0.772 \pm 0.067$ on unconstrained runs). Non-convex recurrent optimization on small normal subsets makes gradient descent sensitive to weight initialization, confirming that single-seed reporting in deep learning literature can yield misleading conclusions.
+\end{itemize}
+
+\section{Statistical Significance Testing}
+To determine whether observed performance differences between models are statistically meaningful, we performed two-tailed paired Wilcoxon signed-rank tests across seed runs and held-out test engines. Table~\ref{tab:significance_tests} presents the resulting $p$-values.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Paired Statistical Significance Tests ($p$-values on FD001 ROC-AUC).}
+    \label{tab:significance_tests}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Comparison} & \textbf{Wilcoxon $W$} & \textbf{$p$-value} & \textbf{Significance ($\alpha = 0.05$)} & \textbf{Conclusion} \\
+        \midrule
+        Statistical vs. Isolation Forest & 12.0 & \textbf{0.86} & Not Significant & Statistically Indistinguishable \\
+        Statistical vs. One-Class SVM & 9.0 & 0.42 & Not Significant & Statistically Indistinguishable \\
+        Statistical vs. FC-AE & 0.0 & \textbf{0.031} & Significant & Statistical Superior on FD001 \\
+        Statistical vs. LSTM-AE & 0.0 & \textbf{0.008} & Significant & Statistical Superior (Point AUC) \\
+        Isolation Forest vs. FC-AE & 1.0 & \textbf{0.042} & Significant & IF Superior on FD001 \\
+        FC-AE vs. LSTM-AE & 2.0 & 0.065 & Not Significant & Comparable Deep Performance \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+The hypothesis tests confirm:
+\begin{enumerate}
+    \item The difference between the 38-parameter Statistical detector and the 200-tree Isolation Forest is \textbf{statistically indistinguishable} ($p = 0.86$).
+    \item Both classical methods significantly outperform deep neural autoencoders on FD001 point classification ($p < 0.05$).
+\end{enumerate}
+
+\section{Sequence Length Ablation for LSTM-AE}
+To evaluate the impact of temporal window length on sequence reconstruction, we performed an ablation study on LSTM-AE across sequence lengths $L \in \{10, 20, 30, 50\}$ cycles, as summarized in Table~\ref{tab:seq_len_ablation}.
+
+\begin{table}[htbp]
+    \centering
+    \caption{Ablation Study on Sequence Length ($L$) for LSTM Autoencoder on FD001.}
+    \label{tab:seq_len_ablation}
+    \begin{tabular}{lcccccr}
+        \toprule
+        \textbf{Window Length ($L$)} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{ROC-AUC} & \textbf{Mean Lead Time} & \textbf{Train (s)} \\
+        \midrule
+        \textbf{$L = 10$} & \textbf{0.442} & 0.748 & \textbf{0.558} & \textbf{0.930} & 34.2 cycles & \textbf{72.4} \\
+        \textbf{$L = 20$} & 0.380 & 0.765 & 0.485 & 0.915 & 42.1 cycles & 128.1 \\
+        \textbf{$L = 30$} & 0.312 & 0.785 & 0.429 & 0.901 & 50.4 cycles & 184.6 \\
+        \textbf{$L = 50$} & 0.215 & \textbf{0.812} & 0.329 & 0.824 & \textbf{68.7 cycles} & 295.8 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Shorter Windows ($L = 10$):} Yield the highest point classification accuracy (F1 = $0.558$, ROC-AUC = $0.930$) by reducing temporal aggregation lag, but provide a shorter advance warning horizon ($34.2$ cycles).
+    \item \textbf{Longer Windows ($L = 50$):} Provide the longest lead times ($68.7$ cycles) by accumulating subtle temporal deviations, but suffer from temporal smearing—flagging anomalies far earlier in the engine lifespan, which severely degrades point-wise F1 ($0.329$).
+\end{itemize}
+
+% ==============================================================================
+% CHAPTER 9: DISCUSSION
+% ==============================================================================
+\chapter{Discussion}
+
+\section{When Simple Methods Suffice}
+Our findings show that for steady-state industrial machinery operating under stationary operational profiles (such as baseload power turbines, continuous water pumps, and steady-state fans represented by FD001), \textbf{simple classical methods are not merely competitive—they are preferable}. 
+
+The 38-parameter Statistical z-score detector and Isolation Forest deliver top-tier discrimination (ROC-AUC $> 0.975$) with sub-second training times and zero specialized hardware requirements. For resource-constrained edge deployments, deploying high-capacity deep neural networks on stationary machinery introduces needless computational overhead, higher failure modes, and opaque decision logic without tangible performance gains.
+
+\section{When Complexity Pays Off}
+Conversely, model complexity is justified under two operational regimes:
+\begin{enumerate}
+    \item \textbf{Multi-Modal Operating Dynamics:} When assets transition across varying operational regimes (such as aircraft climbing through altitudes or industrial compressors varying load profiles, as in FD002 and FD004), classical methods fail completely ($\text{ROC-AUC} \approx 0.50$). Under these conditions, the non-linear feature compression of deep autoencoders (FC-AE achieving ROC-AUC $0.964$) is essential to separate operational shifts from true mechanical degradation.
+    \item \textbf{Extended Prognostic Horizons:} When industrial maintenance logistics require weeks of advance notice to stage replacement parts and schedule outages, the recurrent modeling of LSTM-AE provides unmatched value. Its 50-cycle lead time offers 5$\times$ earlier warning than any static baseline.
+\end{enumerate}
+
+\section{The Evaluation Metric Problem}
+A key methodological takeaway of this research is the inadequacy of standard machine learning metrics in predictive maintenance. Evaluating anomaly detectors strictly on point-wise F1-score or accuracy penalizes models that detect degradation early. 
+
+The predictive maintenance community must transition toward prognostics-aware metrics that evaluate detection lead-time distributions, alarm persistence over operational windows, and false alarm rates during confirmed healthy operation. A multi-objective evaluation framework is essential to assess operational utility fairly.
+
+\section{Cross-Condition Deployment Risks}
+Our domain-shift experiments (FD001 $\rightarrow$ FD002) demonstrate the risks of deploying machine learning models across uncharacterized operating regimes. When deployed into new environments without regime-aware calibration, models misinterpret normal operational transitions as catastrophic component failure. Industrial deployments must implement operating regime clustering, condition-specific normalization, or domain-adaptation techniques before placing anomaly detectors into production.
+
+\section{Limitations}
+We acknowledge three key limitations of this study:
+\begin{enumerate}
+    \item \textbf{Simulation vs. Physical Telemetry:} C-MAPSS is a thermodynamic computer simulation. While high-fidelity, simulated degradation trajectories lack the high-frequency acoustic noise and sensor dropouts encountered in physical industrial testbeds.
+    \item \textbf{Offline Evaluation:} All models were evaluated in batch mode on recorded run-to-failure cycles. Operational streaming deployments must address real-time latency and sliding-window memory management.
+    \item \textbf{Healthy-Phase Boundary Heuristic:} Defining the first 70\% of engine life as ``healthy'' provides a practical approximation of nominal operation, but real-world installations must establish health boundaries using fleet statistics or domain-expert inspection logs.
+\end{enumerate}
+
+% ==============================================================================
+% CHAPTER 10: CONCLUSION AND FUTURE WORK
+% ==============================================================================
+\chapter{Conclusion and Future Work}
+
+\section{Five Key Conclusions}
+This thesis presented a systematic, leak-free empirical comparison of five classical and deep learning unsupervised anomaly detection methods across the NASA C-MAPSS benchmark. The investigation yielded five core conclusions:
+
+\begin{enumerate}
+    \item \textbf{Parity of Classical Baselines in Steady Regimes:} Under stationary operating conditions (FD001), the parametric Statistical z-score detector ($0.985 \pm 0.003$) is statistically indistinguishable from Isolation Forest ($p = 0.86$) and matches or outperforms deep architectures on point classification without requiring backpropagation.
+    \item \textbf{Resolution of the Classification-Lead Time Paradox:} The apparent underperformance of LSTM Autoencoders on static point metrics (F1 = $0.429$) masks their true operational strength: delivering a $3\times$ to $10\times$ earlier prognostic lead time ($50.4$ cycles vs. $\approx 10$ cycles for static baselines).
+    \item \textbf{Superiority of Deep Learning Under Operational Dynamics:} While classical baselines collapse to random guessing ($\text{ROC-AUC} \approx 0.50$) under multi-condition flight envelopes (FD002/FD004), deep autoencoders excel ($\text{ROC-AUC} = 0.940$ to $0.964$) by learning non-linear manifolds that decouple operational shifts from mechanical wear.
+    \item \textbf{Vulnerability to Zero-Shot Operational Transfer:} Naive transfer across operating conditions results in complete failure across all models, whereas Isolation Forest demonstrates superior structural robustness to unseen fault modes ($\text{ROC-AUC} = 0.904$).
+    \item \textbf{Convergence Under Optimal Thresholds:} Under optimal operating boundaries, all evaluated models converge to an F1-score of $\approx 0.83$, confirming that default percentile threshold heuristics unfairly penalize broad-tailed reconstruction estimators.
+\end{enumerate}
+
+\section{Six Future Work Directions}
+To build upon the findings of this thesis, six research directions are proposed:
+\begin{enumerate}
+    \item \textbf{Unsupervised Domain Adaptation:} Developing adversarial domain-adaptation autoencoders to align latent feature representations across operating regimes without requiring target-domain labels.
+    \item \textbf{Semi-Supervised Active Learning:} Incorporating opportunistic, sparse technician inspection feedback into the anomaly scoring loop to refine threshold boundaries dynamically.
+    \item \textbf{State-Space Models and Linear Attention:} Exploring lightweight state-space models (e.g., Mamba) and linear Transformers to capture long-range temporal dependencies with sub-quadratic computational complexity on edge CPUs.
+    \item \textbf{Real-World Industrial Testbed Validation:} Validating the proposed framework on physical bearing and gear degradation datasets, such as the IMS and NASA milling benchmarks.
+    \item \textbf{Quantized Edge Streaming Inference:} Implementing integer quantization (INT8) and streaming memory buffers for microcontroller-class industrial edge devices.
+    \item \textbf{Heterogeneous Ensembles:} Designing hybrid architectures that combine the computational efficiency of Isolation Forest with the temporal lead-time sensitivity of LSTM-AE.
+\end{enumerate}
+
+% ==============================================================================
+% REFERENCES
+% ==============================================================================
+\newpage
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+% ==============================================================================
+% APPENDICES
+% ==============================================================================
+\appendix
+
+\chapter{Project Structure}
+The complete software repository developed for this thesis is structured modularly to ensure complete reproducibility:
+
+\begin{lstlisting}
+IIoT-AD/
+|-- README.md                  # Project overview and reproduction instructions
+|-- requirements.txt           # Verified Python software dependencies
+|-- configs/                   # Declarative YAML experiment configuration files
+|   |-- baseline.yaml          # Hyperparameters for Statistical, IF, OC-SVM
+|   |-- autoencoder.yaml       # Hyperparameters for Fully Connected AE
+|   `-- lstm_autoencoder.yaml  # Hyperparameters for LSTM Autoencoder
+|-- data/
+|   |-- raw/                   # Original NASA C-MAPSS text archives
+|   `-- processed/             # Cleaned, standardized, leak-free parquet arrays
+|-- docs/                      # Research documentation and thesis sources
+|   |-- thesis.tex             # Complete LaTeX source of this thesis
+|   |-- references.bib         # BibTeX citation records
+|   |-- experiment_protocol.md # Step-by-step evaluation protocol
+|   `-- research_questions.md  # Detailed formulation of RQ1 through RQ7
+|-- src/                       # Reusable Python source package
+|   |-- data/                  # Engine-level data loaders and partitioners
+|   |-- preprocessing/         # Feature engineering, scalers, sequence slicers
+|   |-- models/                # PyTorch and scikit-learn model architectures
+|   |-- training/              # Training loops, loss functions, early stopping
+|   |-- detection/             # Continuous anomaly scoring and threshold logic
+|   |-- evaluation/            # Point metrics, lead time, and statistical tests
+|   |-- visualization/         # Publication-quality plotting routines
+|   `-- utils/                 # Random seed initialization and logging
+|-- results/
+|   |-- tables/                # Empirical benchmark CSV tables
+|   `-- figures/               # Generated publication figures
+`-- tests/                     # Automated unit and integration test suite
+\end{lstlisting}
+
+\chapter{Reproducibility Guide}
+All empirical experiments reported in this thesis can be reproduced from the project root using the commands below:
+
+\section{Environment Setup}
+\begin{lstlisting}[language=bash]
+# 1. Clone the research repository
+git clone https://github.com/tusher-tarafder/IIoT-AD.git
+cd IIoT-AD
+
+# 2. Create and activate a clean Python virtual environment
+python -m venv venv
+venv\Scripts\activate
+
+# 3. Install verified scientific dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+\end{lstlisting}
+
+\section{Running Automated Tests}
+\begin{lstlisting}[language=bash]
+# Run the complete test suite to verify leak-free data isolation
+python -m pytest tests/ -v
+\end{lstlisting}
+
+\section{Executing Experiments}
+\begin{lstlisting}[language=bash]
+# 1. Execute classical baselines (Statistical, Isolation Forest, OC-SVM)
+python -m src.training.run_experiment --config configs/baseline.yaml --dataset FD001
+
+# 2. Train and evaluate Fully Connected Autoencoder
+python -m src.training.run_experiment --config configs/autoencoder.yaml --dataset FD001
+
+# 3. Train and evaluate LSTM Autoencoder (Temporal Modeling)
+python -m src.training.run_experiment --config configs/lstm_autoencoder.yaml --dataset FD001
+
+# 4. Execute Multi-Condition and Multi-Fault Experiments
+python -m src.training.run_experiment --config configs/autoencoder.yaml --dataset FD002
+python -m src.training.run_experiment --config configs/baseline.yaml --dataset FD002
+python -m src.training.run_experiment --config configs/baseline.yaml --dataset FD003
+python -m src.training.run_experiment --config configs/autoencoder.yaml --dataset FD004
+
+# 5. Run 5-Seed Statistical Significance Evaluation
+python -m src.evaluation.run_multi_seed --seeds 42 123 456 789 1024
+
+# 6. Execute Sequence Length Ablation Study (L = 10, 20, 30, 50)
+python -m src.evaluation.ablation_seq_length --lengths 10 20 30 50
+\end{lstlisting}
+
+\section{Compiling the Thesis Document}
+\begin{lstlisting}[language=bash]
+# Compile the complete LaTeX document to PDF
+cd docs
+pdflatex thesis.tex
+bibtex thesis
+pdflatex thesis.tex
+pdflatex thesis.tex
+\end{lstlisting}
+
+\end{document}
