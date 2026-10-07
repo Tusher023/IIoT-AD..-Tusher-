@@ -44,7 +44,8 @@ dist/
 eggs/
 .eggs/
 
-# IDEs
+# IDEs and Office temporary files
 .idea/
 .vscode/settings.json
 .DS_Store
+~$*
